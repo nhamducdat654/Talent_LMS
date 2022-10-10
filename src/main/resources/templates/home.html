@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section class="home">
+                <div class="container">
+                    <div class="course__menu">
+                        <a class="course__menu-link active">Home</a>
+                    </div>
+                    <div class="course__main">
+                        <!--Home Admin-->
+                        <div class="course__content" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                            <div class="couse__content-wrap-admin">
+                                <div class="tl-icons-block">
+                                    <span class="tl-icons-stack"><a href="/users"><i class="fa fa-user"></i></a></span>
+                                    <div class="tl-icons-label">
+                                        <div class="tl-title-label"><a href="/users">USERS</a></div>
+                                        <div class="tl-icons-link">
+                                            <a href="/user/create">Add user</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tl-icons-block">
+                                    <span class="tl-icons-stack"><a href="/courseList"><i class="fa fa-book"></i></a></span>
+                                    <div class="tl-icons-label">
+                                        <div class="tl-title-label"><a href="/courseList">COURSES</a></div>
+                                        <div class="tl-icons-link">
+                                            <a href="/addCourse">Add course</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tl-icons-block">
+                                    <span class="tl-icons-stack"><a href="/categorylist"><i class="fa fa-bars"></i></a></span>
+                                    <div class="tl-icons-label">
+                                        <div class="tl-title-label"><a href="/categorylist">CATEGORIES</a></div>
+                                        <div class="tl-icons-link">
+                                            <a href="/addcategoryform">Add category</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tl-icons-block">
+                                    <span class="tl-icons-stack"><a href="#"><i class="fa fa-chart-pie"></i></a></span>
+                                    <div class="tl-icons-label">
+                                        <div class="tl-title-label"><a href="#">REPORTS</a></div>
+                                        <div class="tl-icons-link">
+                                            <a href="#">Users</a>.
+                                            <a href="#">Courses</a>.</br>
+                                            <a href="#">Tests</a>.
+                                            <a href="#">Timeline</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="couse__content-wrap-admin-timeline">
+
+                            </div>
+                        </div>
+                        <!--Home Admin-->
+
+
+                        <!--Home User-->
+                        <div class="course__content" th:if="${USER.role.roleName == 'Instructor' || USER.role.roleName == 'Leaner'}">
+                            <!--Not null-->
+                            <div class="couse__content-wrap-home" th:if="${!MY_COURSE.isEmpty()}">
+                                <div class="course__option">
+                                    <input type="text" name="" id="searchMyCourse" onkeyup="searchMyCourse()" class="course__search" placeholder="Search my courses">
+                                    <div class="course__function">
+                                        <div class="course__sort">
+                                            <div class="course__sort-current">
+                                                <i class="fas fa-layer-group"></i>
+                                                <span>Name</span>
+                                            </div>
+                                            <div class="course__sort-option">
+                                                <a href="#" class="active">Name</a>
+                                                <a href="#">Price</a>
+                                            </div>
+                                        </div>
+                                        <div class="course__view">
+                                            <button class="active"><i class="fas fa-th-list"></i></button>
+                                            <button><i class="fas fa-th"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="course-list" th:if="${USER.role.roleName == 'Instructor'}" th:each="cate : ${CATE}">
+                                    <div class="list-category" th:text="${cate.categoryName}"></div>
+                                    <div class="course__content-list">
+                                        <div class="course__content-item" th:each="course : ${MY_COURSE}" th:if="${course.category.categoryID == cate.categoryID}" th:onclick="submitDetail([[${course.courseID}]])">
+                                            <a href="#" class="list-course">
+                                                <div class="list-course-img" th:if="${course.courseImg == null}">
+                                                    <img src="img/unknown_big.png" alt="">
+                                                </div>
+                                                <div class="list-course-img" th:if="${course.courseImg != null}">
+                                                    <img th:src="${course.courseImg}" alt="">
+                                                </div>
+                                                <p style="display: inline" class="course-name" th:text="${course.courseName}"></p>
+                                                <span>INFO</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="course-list" th:if="${USER.role.roleName == 'Leaner'}" th:each="cate : ${CATE}">
+                                    <div class="list-category" th:text="${cate.categoryName}"></div>
+                                    <div class="course__content-list">
+                                        <div class="course__content-item" th:each="course : ${MY_COURSE}" th:if="${course.category.categoryID == cate.categoryID}" th:onclick="submitDetail([[${course.courseID}]])">
+                                            <a href="#" class="list-course">
+                                                <div class="list-course-img" th:if="${course.courseImg == null}">
+                                                    <img src="img/unknown_big.png" alt="">
+                                                </div>
+                                                <div class="list-course-img" th:if="${course.courseImg != null}">
+                                                    <img th:src="${course.courseImg}" alt="">
+                                                </div>
+                                                <p style="display: inline" class="course-name"
+                                                   th:text="${course.courseName}"></p>
+                                                <span>INFO</span>
+                                                <span th:each="progress : ${EACH_PROGRESS}" th:if="${progress.courseID == course.courseID && progress.calcProgress != 100 }" class="progress_course"
+                                                      th:style="'background: linear-gradient(to right, #00c853 '+@{${progress.calcProgress}}+'%,#999999 10%);'"
+                                                      th:text="${progress.calcProgress}">
+                                                </span>
+                                                <span
+                                                    th:each="progress : ${EACH_PROGRESS}" th:if="${progress.courseID == course.courseID && progress.calcProgress == 100 }"
+                                                    class="progress_course"
+                                                    style="background: linear-gradient(to right, #00c853 100%,#999999 10%);width: 90px !important;text-align: center;">
+                                                    COMPLETE <i class="fa fa-circle-notch"></i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Not null-->
+
+                            <!--Null-->
+                            <div class="couse__content-wrap-home" th:if="${MY_COURSE.isEmpty()}">
+                                <div class="null-course"><img src="img/courses.svg"></div>
+                                <div th:if="${USER.role.roleName == 'Instructor'}">
+                                    <div class="null-course"><span>Looks like you don't have any courses yet</span></div>
+                                    <div class="null-course"><a href="/addCourse" class="btn btn-primary">Add your first course</a></div>
+                                </div>
+
+                                <div th:if="${USER.role.roleName == 'Leaner'}">
+                                    <div class="null-course"><span>Looks like you don't have any courses yet</br>
+                                            Find and add courses from the <a href="/course-catalog">Course Catalog</a></span></div>
+                                    <div class="null-course"><a href="/course-catalog" class="btn btn-primary">Get your first course</a></div>
+                                </div>
+                            </div>
+                            <!--Null-->
+
+                            <div class="course__content-categories-home">
+                                <div class="course_categories-right" th:if="${USER.role.roleName == 'Instructor'}">
+                                    <span class="tl-icons-stack-categories"><a href="/courseList"><i class="fa fa-book"></i></a></span>
+                                    <div class="user-icons-label">
+                                        <div class="user-title-label">
+                                            <a href="/courseList" class="">COURSE</a>
+                                        </div>
+                                        <a href="/addCourse" class="user-goal">Add course</a>
+                                    </div>
+                                </div>
+
+                                <div class="course_categories-right" th:if="${USER.role.roleName == 'Leaner'}">
+                                    <span class="tl-icons-stack-categories"><a href="/course-catalog"><i class="fa fa-book"></i></a></span>
+                                    <div class="user-icons-label">
+                                        <div class="user-title-label">
+                                            <a href="/course-catalog" class="">COURSE CATALOG</a>
+                                        </div>
+                                        <div class="user-goal">Find new courses</div>
+                                    </div>
+                                </div>
+
+                                <div class="course_categories-right" th:if="${USER.role.roleName == 'Leaner'}">
+                                    <span class="tl-icons-stack-categories"><a href="#"><i class="fa fa-chart-line"></i></a></span>
+                                    <div class="user-icons-label">
+                                        <div class="user-title-label">
+                                            <a href="#" class="">PROGRESS</a>
+                                        </div>
+                                        <div class="user-goal">Find out how you are doing with your training</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Home User-->
+                    </div>
+                    <div class="another">
+                        <span class="another__upgrade">Upgrade <i class="fas fa-lock"></i></span>
+                        <span class="another__version">TalentLMS 4.8</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+    <script src="js/index.js"></script>
+    <script>
+                                        function submitDetail(courseID) {
+                                            location.href = "course-detail?txtCourseID=" + courseID + "&txtURL=home";
+                                        }
+    </script>
+</html>

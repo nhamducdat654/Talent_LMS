@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Course List</title>
+
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+              rel="stylesheet">
+        <style>
+            #option_pagging a:hover{
+                background-color: #F5F5F5;
+                border: 1px solid #F5F5F5;
+
+            }
+
+            #option_pagging a{
+                background-color: white;
+                border: 1px solid white;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section>
+                <div class="container">
+                    <div class="course__menu">
+                        <a th:href="@{/home-page}" class="course__menu-link">Home</a>
+                        <div class="course__menu-plash">/</div>
+                        <a class="course__menu-link active">Courses</a>
+                    </div>
+                    <div class="course__main">
+                        <div class="course__add">
+                            <div class="course__add-right">
+                                <a th:href="@{/addCourse}" class="--add">Add course</a>
+                                <div class="--another-option">
+                                    <a href="#" class="mass-actions">Mass actions <i class="fas fa-sort-down"></i></a>
+                                    <div class="mass-actions__another">
+                                        <a data-bs-toggle="modal" data-bs-target="#activeModel" class="countAc">Activate</a>
+                                        <a data-bs-toggle="modal" data-bs-target="#deActiveModel"
+                                           class="countDeac">Deactivate</a>
+                                        <a data-bs-toggle="modal" data-bs-target="#deleteModel"
+                                           class="countDe">Delete</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="activeModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Active</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="activeModelBody">
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a type="button" class="btn btn-success activate" data-bs-dismiss="modal">Active</a>
+                                            <a type="button" class="btn btn-light">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="deActiveModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Deactive</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="deActiveModelBody">
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a type="button" class="btn btn-danger deActivate"
+                                               data-bs-dismiss="modal">Deactive</a>
+                                            <a type="button" class="btn btn-light">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="exampleModalLabel"
+                                 aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" id="deleteModelBody">
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a type="button" class="btn btn-danger deleteCourses"
+                                               data-bs-dismiss="modal">Delete</a>
+                                            <a type="button" class="btn btn-light">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="/course-catalog" class="--view-catalog"><i class="fas fa-share"></i>View course catalog</a>
+                        </div>
+                        <table class="course__list">
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="course__check"> Course
+                                </th>
+                                <th>Category</th>
+                                <th>Last update on</th>
+                                <th>Options</th>
+                            </tr>
+                            <tr class="valueCourse" th:each="listCourse : ${COURSE}">
+
+                            <div class="modal fade" th:id="'exampleModal1' + ${listCourse.courseID}" tabindex="-1"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p style="display: inline">Are you sure you want to clone the course </p>
+                                            <span style="font-weight: 500" th:text="${listCourse.courseName}"></span>
+                                            <span>?</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <a th:href="@{'/cloneCourse?txtid=' + ${listCourse.courseID}}"
+                                               style="font-weight: 500"
+                                               type="button" class="btn btn-danger"><i class="fas fa-magnet"></i> Clone</a>
+                                            <a style="font-weight: 500" type="button" class="btn btn-light"
+                                               data-bs-dismiss="modal">Close</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" th:id="'exampleModal' + ${listCourse.courseID}"
+                                 tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p style="display: inline">Are you sure you want to delete the course </p>
+                                            <span style="font-weight: 500" th:text="${listCourse.courseName}"></span>
+                                            <span>?</span>
+                                        </div>
+                                        <div class="modal-footer">
+
+                                            <a th:href="@{'deleteCoure?txtid=' + ${listCourse.courseID} }"
+                                               style="font-weight: 500" type="button" class="btn btn-danger"><i
+                                                    class="fa fa-trash"></i> Delete</a>
+                                            <a style="font-weight: 500" type="button" class="btn btn-light"
+                                               data-bs-dismiss="modal">Close</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <td class="name__course">
+                                <input th:if="${listCourse.status == 0}" th:value="${listCourse.courseID + 'I'}"
+                                       type="checkbox" class="course__check">
+                                <input th:if="${listCourse.status == 1}" th:value="${listCourse.courseID}"
+                                       type="checkbox" class="course__check">
+                                <a class="main_value_course" th:href="@{'editCourse?txtid=' + ${listCourse.courseID}}"
+                                   th:text="${listCourse.courseName}"></a>
+                                <span th:if="${listCourse.status == 0}" class="course__edit">INACTIVE</span>
+                                <span class="course__price" th:if="${listCourse.price > 0}"
+                                      th:text="${listCourse.price}"></span>
+                            </td>
+                            <td class="cate__course" th:if="${listCourse.category.categoryID == null}">-</td>
+                            <td class="cate__course" th:if="${listCourse.category.categoryID != null}"
+                                th:text="${listCourse.category.categoryName}"></td>
+                            <td>11/07/2021</td>
+                            <td><i class="fas fa-ellipsis-h --threedot"></i>
+                                <div class="option__course">
+                                    <a href="#"><i class="fas fa-signal"></i></a>
+                                    <a th:href="@{'editCourse?txtid=' + ${listCourse.courseID}}"><i
+                                            class="fas fa-pencil-alt"></i></a>
+                                    <a data-bs-toggle="modal" th:data-bs-target="'#exampleModal1' + ${listCourse.courseID}"><i
+                                            class="fas fa-magnet"></i></a>
+                                    <a data-bs-toggle="modal"
+                                       th:data-bs-target="'#exampleModal' + ${listCourse.courseID}"><i
+                                            class="fas fa-times"></i></a>
+                                    <a th:href="@{'course-detail?txtCourseID=' + ${listCourse.courseID} + '&txtURL=home'}"><i class="fas fa-share"></i></a>
+                                </div>
+                            </td>
+                            </tr>
+                        </table>
+                        <div class="course__paging">
+                            <div style="padding: 3px 10px !important;" id="course__paging__more" class="course__paging-more">
+                                <span> 1    to <span id="txtCount" th:text="${NUMCOURSE}"></span> of <span
+                                        th:text="${COUNTCOURSE}"></span> </span>
+
+                                <i style="margin-top: 10px;
+                                   margin-right: 5px;
+                                   font-size: 24px;" th:if="${NUMCOURSE <= COUNTCOURSE && NUMCOURSE > 10}"
+                                   onclick="minusCount()"
+                                   class="fas fa-sort-up"></i>
+                                <i style="font-size: 24px;
+                                   margin-bottom: 10px;"
+                                   th:if="${NUMCOURSE >= 10 && NUMCOURSE < COUNTCOURSE }" onclick="changeCount()"
+                                   class="fas fa-sort-down"></i>
+                            </div>
+                            <div style="    margin-left: 750px;
+                                 margin-top: 5px;"
+                                 class="course__filter">
+                                <a href="#"><i class="fas fa-download"></i></a>
+                                <a href="#"><i class="fas fa-filter"></i></a>
+                                <input type="text" name="" id="txtSearch" class="course__search" placeholder="Search">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="another">
+                        <span class="another__upgrade">Upgrade <i class="fas fa-lock"></i></span>
+                        <span class="another__version">TalentLMS 4.8</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script src="js/index.js"></script>
+        <script>
+
+                                       document.getElementById("txtSearch").addEventListener("input", () => {
+                                           let input = document.getElementById("txtSearch").value;
+
+                                           li = document.getElementsByClassName("valueCourse");
+                                           for (let i = 0; i < li.length; i++) {
+                                               if (input.length > 0) {
+                                                   document.getElementById("course__paging__more").style.display = "none";
+                                                   let value = li[i].getElementsByClassName("name__course")[0].getElementsByClassName("main_value_course")[0].innerHTML;
+                                                   let cate = li[i].getElementsByClassName("cate__course")[0].innerHTML;
+                                                   if (!value.toUpperCase().includes(input.toUpperCase()) && !cate.toUpperCase().includes(input.toUpperCase())) {
+                                                       li[i].style.display = "none";
+                                                   } else {
+                                                       li[i].style.display = "";
+                                                   }
+
+                                               } else {
+                                                   document.getElementById("course__paging__more").style.display = "";
+                                                   li[i].style.display = "";
+                                               }
+
+                                           }
+                                       })
+
+                                       function changeCount() {
+                                           let count = document.getElementById("txtCount").innerHTML;
+                                           window.location = "courseList?txtCount=" + (parseInt(count) + 10);
+                                       }
+
+                                       function minusCount() {
+                                           let count = document.getElementById("txtCount").innerHTML;
+
+                                           if (parseInt(count) % (parseInt(count.charAt(0)) * 10) == 0) {
+                                               window.location = "courseList?txtCount=" + (parseInt(count) - 10);
+                                           } else {
+                                               let minus = parseInt(count) % (parseInt(count.charAt(0)) * 10);
+                                               window.location = "courseList?txtCount=" + (parseInt(count) - minus);
+                                           }
+
+                                       }
+                                       
+        </script>
+    </body>
+</html>

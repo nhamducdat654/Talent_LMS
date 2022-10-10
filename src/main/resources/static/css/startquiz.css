@@ -1,0 +1,1355 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f3f3f3;
+}
+
+header {
+    background-color: #ffffff;
+    height: 63px;
+    border-bottom: 1px solid #cfd8dc;
+    padding: 5px 185px 5px 185px;
+    display: flex;
+    justify-content: space-between;
+}
+
+header a {
+    background-color: #ffffff;
+}
+
+header a img {
+    height: 30px;
+    background-color: #ffffff;
+    margin-top: 9px;
+}
+
+header div {
+    background-color: #ffffff;
+}
+
+header div input {
+    margin: 0 8px;
+    border-color: #cfd8dc;
+    height: 34px;
+    box-sizing: border-box;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
+    font-size: 13px;
+    line-height: 18px;
+    color: #555555;
+    width: 140px;
+    padding: 4px 6px;
+    border-radius: 4px;
+}
+
+header div a {
+    font-size: 12.35px !important;
+    color: #4d4136;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+header div a span {
+    background-color: #ffffff;
+}
+
+header div a b {
+    background-color: #ffffff;
+}
+
+.point {
+    background-color: #62c462;
+    margin-right: 10px;
+    margin-left: 10px;
+    height: 30px;
+    width: 120px;
+    line-height: 50px;
+}
+
+header div a:hover {
+    color: black;
+}
+
+.carpet {
+    margin: 14px 5px 0 8px;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: top;
+    border-top: 4px solid #000000;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+}
+
+.dropbtn {
+    padding: 16px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.dropdown {
+    position: relative;
+    z-index: 10;
+    display: inline;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a i {
+    margin-right: 10px;
+}
+
+.spacer-dashboard {
+    height: 15px;
+    background-color: #f3f3f3;
+}
+
+input:focus {
+    border: 1px solid #0084d6;
+    box-shadow: 0 0 1px 1px RGBA(0, 132, 214, 0.25);
+}
+
+.quiz__name {
+    display: flex;
+    align-items: center;
+}
+
+.quiz__name i {
+    display: none;
+}
+
+.quiz__name h6 {
+    margin-left: 10px;
+    text-transform: initial;
+}
+
+.quiz__name:hover .back-icon {
+    display: block;
+}
+
+.learn-progress {
+    margin: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.05);
+}
+
+.progress-number {
+    font-size: 13px;
+    line-height: 22px;
+    background-color: rgb(24, 150, 24);
+    border-radius: 10px;
+    width: 60%;
+    text-align: center;
+}
+
+.line-bottom {
+    border-bottom: 1px solid #ccd3e0;
+}
+
+.line-top {
+    border-top: 1px solid #ccd3e0;
+}
+
+.quiz__progress a,
+.learn__progress a {
+    text-transform: initial;
+}
+
+.quiz__progress i {
+    color: rgb(96, 136, 37);
+}
+
+
+/* ---------add quiz---------------- */
+
+.quiz__content-list {
+    margin-top: 30px;
+}
+
+.quiz__content-list .none-quiz {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    display: none;
+}
+
+.none-quiz p {
+    font-size: 14px;
+    width: max-content;
+}
+
+.none-quiz h3 {
+    margin-top: 20px;
+}
+
+.quiz__content-list.active {
+    position: relative;
+    background-color: #f3f3f3b7;
+    height: 500px;
+}
+
+.quiz__content-list.active .none-quiz {
+    display: block;
+}
+
+.result__wrap,
+.quiz__content-wrap {
+    width: 100%;
+    padding: 20px;
+}
+
+main {
+    background-color: #f3f3f3;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.quiz__menu {
+    display: flex;
+    background-color: #0084d6;
+    padding: 20px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+.quiz__menu-link,
+.quiz__menu-plash {
+    margin-left: 2px;
+    margin-right: 2px;
+    font-size: 13px;
+    color: #ffffff;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+}
+
+.quiz__menu-link:hover {
+    color: #ffffff;
+}
+
+.quiz__menu-link:not(.active):hover {
+    text-decoration: underline;
+}
+
+.quiz__menu .active {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.show-quesion,
+.show-options {
+    position: relative;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.show-quesion span,
+.show-options span {
+    height: 100%;
+    background-color: #f5f5f5;
+    border: 1px solid #ccd3e0;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px 20px;
+    border-radius: 5px 0 0 5px;
+    transition: 0.3s;
+}
+
+.show-quesion span:hover,
+.show-quesion i:hover {
+    background-color: #9e9e9ead;
+    transition: 0.3s;
+}
+
+.show-options span:hover,
+.show-options i:hover {
+    background-color: #1c55f3;
+    transition: 0.3s;
+}
+
+.show-quesion i,
+.show-options i {
+    background-color: #f5f5f5;
+    border: 1px solid #ccd3e0;
+    font-size: 12px;
+    font-weight: bold;
+    height: 100%;
+    padding: 5px 10px;
+    border-radius: 0 5px 5px 0;
+    transition: 0.3s;
+}
+
+.show-options span,
+.show-options i {
+    background-color: #003de6;
+    border: 1px solid #7b7b7e;
+}
+
+.show-quesion .option {
+    display: none;
+    position: absolute;
+    font-size: 12px;
+    text-decoration: none;
+    color: black;
+    bottom: -38px;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #fff;
+    padding: 10px 10px;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.27);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.27);
+}
+
+.show-quesion .option:hover {
+    background-color: #ccd3e0;
+}
+
+.show-quesion .option.active {
+    display: block;
+}
+
+.quiz__main {
+    background-color: #fff;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+.quiz__option {
+    display: flex;
+    justify-content: space-between;
+}
+
+.quiz__option input {
+    padding: 10px;
+    width: 350px;
+    height: 30px;
+    border: 1px solid #ccd3e0;
+    color: black;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    outline: none;
+    transition: 0.5s;
+    background-color: #f5f5f5;
+}
+
+.quiz__content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.quiz__content-list table {
+    width: 100%;
+}
+
+.quiz__content-list table th {
+    padding: 8px;
+    font-size: 18px;
+    color: white;
+    background-color: #0084d6;
+    text-transform: uppercase;
+    font-weight: normal;
+    line-height: 28px;
+}
+
+.tl-left {
+    text-align: left;
+}
+
+.tl-center {
+    text-align: center;
+}
+
+table .odd {
+    background-color: white;
+}
+
+table .even {
+    background-color: #f5f5f5;
+}
+
+table td {
+    padding: 15px 8px;
+    position: relative;
+}
+
+.quiz__content-list table td {
+    vertical-align: center;
+    font-size: 15px;
+}
+
+.quiz__content-list table td:last-child {
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.quiz__content-list table th:first-child {
+    width: 85px;
+}
+
+.add {
+    text-decoration: none;
+    background-color: #51a351;
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 7px;
+}
+
+.add.active {
+    background-color: #423399;
+}
+
+.add:hover {
+    color: white;
+}
+
+td input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+tr td:nth-child(2) {
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+/* Create a custom checkbox */
+
+td .checkmark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 15px;
+    width: 15px;
+    background-color: #ddd;
+    border: 1px solid #000;
+}
+
+tr td input:checked~.checkmark {
+    background-color: #edf2f3;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+
+td .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+
+/* Show the checkmark when checked */
+
+tr td input:checked~.checkmark:after {
+    display: block;
+}
+
+td .checkmark:after {
+    left: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+td .edit {
+    display: none;
+    position: absolute;
+    width: max-content;
+    padding-left: 120px;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -165px;
+    background-color: #cce8f3;
+}
+
+td .edit img {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    z-index: 10;
+}
+
+td .edit a {
+    position: relative;
+    margin-left: 20px;
+}
+
+tr:hover {
+    background-color: #cce8f3;
+}
+
+tr:hover td .edit {
+    display: block;
+}
+
+td .edit a:after {
+    display: none;
+    content: "";
+    position: absolute;
+    background-color: white;
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.edit a:hover::after {
+    display: block;
+}
+
+td .edit a:first-child {
+    margin-left: 0;
+}
+
+.quiz__paging {
+    background: rgba(99, 109, 116, 0.5);
+    width: max-content;
+    border-radius: 20px;
+}
+
+.quiz__paging span {
+    padding: 5px 10px;
+    font-size: 13px;
+}
+
+.quiz__bottom input {
+    padding: 10px;
+    width: 250px;
+    height: 40px;
+    border: 1px solid #ccd3e0;
+    color: black;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    outline: none;
+    transition: 0.5s;
+    background-color: #f5f5f5;
+}
+
+.quiz__bottom input:focus {
+    border: 1px solid #0084d6;
+    box-shadow: 0 0 1px 1px RGBA(0, 132, 214, 0.25);
+}
+
+.quiz__bottom {
+    display: flex;
+    margin-top: 20px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 50px;
+}
+
+.bottom__right {
+    display: flex;
+    align-items: center;
+}
+
+.bottom__right img {
+    margin-right: 20px;
+    width: 30px;
+    height: 4 0px;
+}
+
+.show-options .more {
+    position: absolute;
+    flex-direction: column;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.27);
+    box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.27);
+    border-radius: 5px;
+    background-color: #fff;
+    bottom: -76px;
+    display: none;
+}
+
+.show-options {
+    align-items: unset;
+}
+
+.show-options p {
+    margin: 0 5px;
+}
+
+.show-options .cancel {
+    text-decoration: none;
+    color: #000;
+}
+
+.show-options .cancel:hover {
+    text-decoration: underline;
+}
+
+.show-options .option {
+    font-size: 12px;
+    text-decoration: none;
+    color: black;
+    bottom: -38px;
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+}
+
+.show-options .option:hover {
+    background-color: #ccd3e0;
+}
+
+.show-options .more.active {
+    display: flex;
+}
+
+.save {
+    border-top: 1px solid #ccd3e0;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.manager a {
+    padding: 5px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.manager a.red {
+    background-color: rgb(214, 88, 88);
+    color: #fff;
+}
+
+.manager a.red:hover {
+    background-color: rgb(212, 57, 57);
+}
+
+.manager a.gray {
+    background-color: #dcdfe6;
+    color: #000;
+    transition: 0.3s;
+}
+
+.manager a.gray:hover {
+    background-color: #9aa2b1;
+    transition: 0.3s;
+}
+
+.manager a.gray {
+    background-color: #ccd3e0;
+    color: #000;
+}
+
+.manager a.gray i {
+    margin-right: 10px;
+}
+
+.manager .deactivate.active {
+    background-color: rgb(26, 167, 26);
+}
+
+.manager .deactivate.active:hover {
+    background-color: rgb(7, 116, 7);
+}
+
+
+/* -----------Detail---------------- */
+
+.quiz__content-selection i {
+    background-color: #ccd3e0;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.item>a {
+    color: black;
+}
+
+.quiz__content-selection {
+    width: 350px;
+    padding: 10px;
+    border-left: 1px solid #ccd3e0;
+}
+
+.select-option .item .choose>a {
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.select-option .item .choose a:hover {
+    text-decoration: underline;
+}
+
+.choose {
+    margin-left: 10px;
+}
+
+.select-option .item {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+
+.select-option .item.selected i {
+    background-color: rgb(107, 107, 235);
+    color: white;
+}
+
+.select-option .item.selected {
+    background-color: #e3e7ee;
+}
+
+.item .choose a:not(:first-child) {
+    font-size: 12px;
+    text-transform: capitalize;
+    margin-top: 10px;
+}
+
+.item .choose a.black {
+    color: black;
+}
+
+.item .choose a {
+    display: block;
+}
+
+.select-option .item:last-child {
+    align-items: flex-start;
+    padding-top: 20px;
+    border-top: 1px solid #ccd3e0;
+    border-radius: 0;
+    margin-top: 40px;
+}
+
+.another {
+    text-align: right;
+    padding: 10px;
+}
+
+.delete-confirm {
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: rgba(0, 0, 0, .7);
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.delete-confirm.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delete-form {
+    border-radius: 10px;
+    position: absolute;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    width: 600px;
+    z-index: 20;
+    background-color: white;
+    top: 50px;
+    transform: translateY(-300px);
+    transition: transform 0.3s;
+}
+
+.delete-form.active {
+    transform: translateY(0);
+    transition: transform 0.3s;
+}
+
+.delete-form .head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.delete-form .text {
+    padding: 20px 10px;
+    border-top: 1px solid #ccd3e0;
+    border-bottom: 1px solid #ccd3e0;
+}
+
+.delete-form .head,
+.delete-form .manager {
+    padding: 15px;
+}
+
+.delete-form .head i {
+    cursor: pointer;
+}
+
+.delete-form .manager {
+    background-color: #dcdce6;
+    text-align: right;
+    border-radius: 0 0 10px 10px;
+}
+
+
+/* add ques */
+
+.add-questions {
+    background-color: #fff;
+}
+
+.add-wrapper {
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 5px 5px;
+}
+
+.add-wrapper .save span {
+    padding: 5px 40px;
+    color: white;
+}
+
+.add-wrapper .save i {
+    color: white;
+}
+
+.add-questions .save {
+    margin: 10px;
+}
+
+#toolbar-container {
+    padding: 20px 10px;
+}
+
+.line {
+    margin: 10px 10px;
+    border-bottom: 1px solid #ccd3e0;
+    border-top: 1px solid #ccd3e0;
+    padding: 10px 0;
+}
+
+#editor {
+    height: 300px;
+    width: 100% - 20px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.feedback {
+    padding: 0 10px;
+}
+
+.feedback a {
+    display: block;
+    text-decoration: none;
+    color: black;
+    margin-bottom: 10px;
+}
+
+.feedback i {
+    margin-right: 10px;
+;
+}
+
+.feedback a:hover {
+    text-decoration: underline;
+    color: black;
+}
+
+.answer-add input[type=text] {
+    padding: 10px;
+    width: 350px;
+    height: 30px;
+    border: 1px solid #ccd3e0;
+    color: black;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    outline: none;
+    transition: 0.5s;
+    background-color: #fff;
+}
+
+.tag-text {
+    padding: 10px;
+    width: 525px;
+    height: 30px;
+    border: 1px solid #ccd3e0;
+    color: black;
+    font-size: 12px;
+    font-family: 'Open Sans', sans-serif;
+    border-radius: 3px;
+    outline: none;
+    transition: 0.5s;
+    background-color: #fff;
+}
+
+.form-input {
+    margin-bottom: 10px;
+}
+
+.form-input i {
+    display: none;
+}
+
+.form-input:hover i {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.form-input input,
+.form-input span {
+    margin-right: 10px;
+}
+
+textarea {
+    outline: none;
+    transition: 0.5s;
+}
+
+textarea:focus {
+    border: 1px solid #0084d6;
+    box-shadow: 0 0 1px 1px RGBA(0, 132, 214, 0.25);
+}
+
+.btn-add {
+    padding: 5px 20px;
+    font-size: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #a4a8b1;
+    width: max-content;
+    cursor: pointer;
+}
+
+.add-questions .show-options .more {
+    bottom: -40px;
+}
+
+.feedback form {
+    display: none;
+}
+
+.feedback form.active {
+    display: block;
+}
+
+.introduce-quiz .none-quiz {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+}
+
+.introduce-quiz .none-quiz p {
+    width: 100%;
+}
+
+.introduce-quiz .none-quiz h3 {
+    padding-top: 20px;
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+.introduce-quiz {
+    position: relative;
+    background-color: white;
+    height: 500px;
+}
+
+.introduce {
+    margin-top: 30px;
+}
+
+.introduce,
+.do-quiz {
+    background-color: #f3f3f3;
+}
+
+.start-quiz {
+    background-color: #f3f3f3;
+}
+
+.btn-start {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    padding: 10px 15px;
+    background: #cec5c594;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-start:hover {
+    color: black;
+    background-color: #a79a9a94;
+}
+
+.question-wrap {
+    display: none;
+    background-color: white;
+    padding: 40px;
+}
+
+.question-wrap.active{
+    display: block;
+}
+.question-wrap .question {
+    font-size: 20px;
+}
+
+.btn-complete {
+    text-align: center;
+    margin: 20px;
+}
+
+
+/* answer */
+
+.answer-wrap {
+    margin-top: 50px;
+}
+
+.box {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 100;
+    margin-bottom: 10px;
+    opacity: 0;
+    margin-right: 10px;
+}
+
+.submit {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+.submit span {
+    font-size: 18px;
+}
+
+.submit .btn-start {
+    padding: 5px 10px;
+}
+
+
+/* ------------------ */
+
+.result__main::after {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #cccccc;
+    margin: 20px 0;
+}
+
+.result__main {
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.date__result {
+    font-style: italic;
+}
+
+.result__img i {
+    font-size: 100px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.result__img .fa-times {
+    color: #9d261d;
+}
+
+.result__img .fa-check {
+    color: green;
+}
+
+.block__result {
+    padding: 8px 5px;
+    width: 70px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 14px;
+    color: #fff;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.block__result.--incorrect {
+    background-color: red;
+}
+
+.block__result.--correct {
+    background-color: green;
+}
+
+.answer__correct {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.answer__list {
+    margin-left: 20px;
+}
+
+/* ------------------ */
+.result__wrap{
+    background-color: #fff;
+    width: 100%;
+    padding: 20px;
+    border: 4px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.result__main::after,.result__detail:not(:last-child)::after{
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #cccccc;
+    margin: 20px 0;
+}
+
+.result__main {
+    text-align: center;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.date__result {
+    font-style: italic;
+}
+
+.result__img i {
+    font-size: 100px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.result__img .notpass {
+    color: #9d261d;
+}
+
+.result__img .pass {
+    color: green;
+}
+
+.block__result {
+    padding: 8px 5px;
+    width: 70px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 14px;
+    color: #fff;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.block__result.--incorrect {
+    background-color: red;
+}
+
+.block__result.--correct {
+    background-color: green;
+}
+
+.answer__correct {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.answer__list {
+    margin-left: 20px;
+}
+
+.btn__ctnquiz {
+    text-align: center;
+    display: inline-block;
+    color: black;
+    text-decoration: none;
+    margin-top: 20px;
+    height: 40px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px;
+    transition: 0.5s;
+}
+
+.btn__ctnquiz:hover{
+    color:black;
+    background-color: #f5f5f5;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.result__date span{
+    font-style: italic;
+}
+
+.boldp{
+    font-weight: bold;
+}
+
+.answer{
+    position: relative;
+    font-size: 16px;
+}
+
+.answer-wrap .answer label{
+    margin-left: 25px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+.answer-wrap .answer input{
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.checkmark{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: white;
+    border: 2px solid black;
+    border-radius: 50%;
+}
+
+/* When the radio button is checked, add a blue background */
+.answer input:checked ~ .checkmark {
+    background-color: white;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.answer input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.answer .checkmark:after {
+    top: 50%;
+    left: 11px;
+    transform: translate(-50%,-50%);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #04aa6d;
+}
+
+.option {
+    margin: 0px auto;
+    width: max-content;
+    position: relative;
+}
+
+.up__option {
+    margin-left: -5px;
+    cursor: pointer;
+    display: inline-block;
+    color: black;
+    width: max-content;
+    text-decoration: none;
+    height: 40px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 5px;
+}
+
+.up__option:hover,
+.option__item a:hover,
+.btn__ctnquiz:hover {
+    background-color: #ccc;
+    color: black;
+}
+
+.option__item a {
+    cursor: pointer;
+    display: block;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    width: 80%;
+    margin: 0 auto;
+    padding: 5px;
+    font-size: 13px;
+}
+
+.option__item {
+    padding: 5px;
+    position: absolute;
+    right: 0;
+    top: -15px;
+    width: 200px;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
+    display: none;
+}
+
+.option__item.active {
+    display: block;
+}

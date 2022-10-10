@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Start Quiz</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/startquiz.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+        <style>
+            .certifi {
+                background-color: #fff;
+                border-radius: 4px;
+                position: fixed;
+                padding: 20px 0;
+                z-index: 99;
+                width: 560px;
+                height: 460px;
+                top: 0px;
+                left: 500px;
+                box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+                transform: translateY(-150%);
+                text-align: center;
+                transition: 0.5s;
+            }
+
+            .certifi.active {
+                display: block;
+                top: 90px;
+                transform: translateY(0%);
+                transition: 0.5s;
+            }
+
+            .certifi .close {
+                position: absolute;
+                right: 20px;
+                font-size: 13px;
+                opacity: 0.5;
+                top: 10px;
+                cursor: pointer;
+            }
+
+            .certifi .close:hover {
+                opacity: 1;
+            }
+
+            .certifi__title {
+                font-size: 30px;
+                font-weight: 600;
+                line-height: 36px;
+            }
+
+            .certifi__name-course h3 {
+                font-size: 24px;
+                font-weight: 600;
+                line-height: 36px;
+            }
+
+            .certifi__name-course h4 {
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 27px;
+            }
+
+            .certifi__img img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+            }
+
+            .certifi__img {
+                margin-top: 5px;
+                margin-bottom: 20px;
+            }
+
+            .certifi__listcourse {
+                display: block;
+                text-decoration: none;
+                font-size: 13px;
+                font-weight: 400;
+                color: black;
+                width: max-content;
+                margin-left: 235px;
+                margin-top: 20px;
+            }
+
+            .certifi__listcourse:hover {
+                text-decoration: underline;
+                color: black;
+            }
+
+            .certifi__download {
+                display: block;
+                text-decoration: none;
+                background-color: rgb(0, 61, 245);
+                color: white;
+                font-size: 14px;
+                font-weight: 700;
+                padding: 8px 35px;
+                width: max-content;
+                margin: 0 auto;
+                margin-top: 20px;
+                border-radius: 6px;
+            }
+
+            .certifi__download:hover {
+                color: white;
+                background-color: rgb(0, 61, 223);
+            }
+
+            .overlay {
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                z-index: -1;
+                background: #000;
+                opacity: 0;
+                visibility: hidden;
+                z-index: 19;
+                transition: 0.5s;
+            }
+
+            .overlay.active {
+                transition: 0.5s;
+                opacity: 0.60;
+                visibility: visible;
+            }
+
+            .cerfi__block i {
+                position: absolute;
+                top: 6px;
+                cursor: pointer;
+            }
+
+            body.active {
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body style="background-color: #f3f3f3;">
+        <header class="head__quiz">
+            <div class="container d-flex justify-content-between align-items-center">
+                <a th:if="${USER.role.roleName != 'Leaner'}" th:href="@{'/course-detail?txtCourseID=' + ${QUIZ.course.courseID} + '&txtURL=home'}" class="quiz__name">
+                    <i class="fas fa-chevron-left back-icon"></i>
+                    <h6 class="name" th:text="${QUIZ.course.courseName}"></h6>
+                </a>
+                <a th:if="${USER.role.roleName == 'Leaner'}" href="/home-page" class="quiz__name">
+                    <i class="fas fa-chevron-left back-icon"></i>
+                    <h6 class="name" th:text="${QUIZ.course.courseName}"></h6>
+                </a>
+                <div>
+                    <div class="dropdown user">
+                        <a th:if="${!(COUNT.get(0).getSectionID() == QUIZ.section.sectionID && QUIZ.quizIndex == 1)}"
+                           th:href="@{'/previous-content?txtCourseID=' + ${QUIZ.course.courseID} + '&txtSectionID=' + ${QUIZ.section.sectionID} + '&txtPreIndex=' + ${QUIZ.quizIndex - 1}}"><i class="fas fa-chevron-left"></i></a>
+                        <a href="#" class="dropbtn name__role"><span th:text="${QUIZ.unitName}"></span><b class="carpet"></b></a>
+                        <a th:if="${COURSE_SECTION.size() > 0 && !(COURSE_SECTION.get(COURSE_SECTION.size()-1).getSectionID() == QUIZ.section.sectionID && COUNT.get(COUNT.size() - 1).getCountSection() == QUIZ.quizIndex)}"
+                           th:href="@{'/next-content?txtProgress=' + ${PROGRESS} + '&txtCourseID=' + ${QUIZ.course.courseID} + '&txtSectionID=' + ${QUIZ.section.sectionID} + '&txtNextIndex=' + ${QUIZ.quizIndex + 1}}"><i class="fas fa-chevron-right"></i></a>
+                        <a th:if="${COURSE_SECTION.size() == 0 && !(COUNT.get(COUNT.size() - 1).getCountSection() == QUIZ.quizIndex)}"
+                           th:href="@{'/next-content?txtProgress=' + ${PROGRESS} + '&txtCourseID=' + ${QUIZ.course.courseID} + '&txtSectionID=' + ${QUIZ.section.sectionID} + '&txtNextIndex=' + ${QUIZ.quizIndex + 1}}"><i class="fas fa-chevron-right"></i></a>
+                        <div class="dropdown-content">
+                            <div class="progress-block" style="background-color: #e3dddd; width: 150px; border-radius: 4px; margin: 10px auto; text-align: center; color: white; font-size: 14px; font-weight: 600">
+                                <div  class="progress_course"
+                                      th:style="'background: linear-gradient(to right, #00c853 '+@{${PROGRESS}}+'%,#e3dddd 10%); height: 100%; border-radius: 4px; width: 100%'"
+                                      th:text="${PROGRESS}">
+                                </div>
+                            </div>
+                            <div style="overflow-y: auto; overflow-x: hidden; height: 200px;">
+                                <div class="quiz__progress line-top" th:if="${!LIST_CONTENT.isEmpty() || !LIST_QUIZ.isEmpty()}" >
+                                    <div th:each="count : ${COUNT}" th:if="${count.sectionID == null}">
+                                        <th:block th:each="i: ${#numbers.sequence(0, count.countSection - 1)}">
+                                            <div th:if="${!LIST_CONTENT.isEmpty()}" th:each="content : ${LIST_CONTENT}">
+                                                <div th:if="${content.section.sectionID == null && content.contentIndex == (i+1)}" style="padding: 10px">  
+                                                    <i th:each="progress : ${LIST_PROGRESS}" th:if="${progress.contentuser.content.contentID == content.contentID}" style="color: #00c853" class="fas fa-check"></i>
+                                                    <a th:href="@{'doContent?contentid=' + ${content.contentID}} + '&txtMaxIndex=' + ${count.countSection}" style="font-size: 16px; display: inline-block;" th:text="${content.unitName}"></a>  
+                                                </div>                                          
+                                            </div>
+                                            <div th:if="${!LIST_QUIZ.isEmpty()}" th:each="quiz : ${LIST_QUIZ}">
+                                                <div th:if="${quiz.section.sectionID == null && quiz.quizIndex == (i+1)}" style="padding: 10px">
+                                                    <i th:each="progress : ${LIST_PROGRESS}" th:if="${progress.quizuser.quiz.quizID == quiz.quizID}" style="color: #00c853" class="fas fa-check"></i>
+                                                    <a th:href="@{'doQuiz?quizid=' + ${quiz.quizID}} + '&txtMaxIndex=' + ${count.countSection}" style="font-size: 16px; display: inline-block;" th:text="${quiz.unitName}"></a>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </div>
+                                <div class="learn__progress line-bottom " th:if="${!COURSE_SECTION.isEmpty() || !LIST_CONTENT.isEmpty() || !LIST_QUIZ.isEmpty()}" th:each="section : ${COURSE_SECTION}">
+                                    <div  style="padding-left: 15px;" th:if="${!COURSE_SECTION.isEmpty()}">
+                                        <span th:text="${section.sectionName}" style="background-color: #999999; border-radius: 5px; color: white; padding: 5px; font-size: 12px; text-transform: uppercase; font-weight: 500"></span>
+                                    </div>
+                                    <div th:each="count : ${COUNT}" th:if="${count.sectionID == section.sectionID}">
+                                        <th:block th:each="i: ${#numbers.sequence(0, count.countSection - 1)}">
+                                            <div th:if="${!LIST_CONTENT.isEmpty()}" th:each="content : ${LIST_CONTENT}">
+                                                <div th:if="${content.section.sectionID == section.sectionID && content.contentIndex == (i+1)}" style="padding: 10px">
+                                                    <i th:each="progress : ${LIST_PROGRESS}" th:if="${progress.contentuser.content.contentID == content.contentID}" style="color: #00c853" class="fas fa-check"></i>
+                                                    <a th:href="@{'doContent?contentid=' + ${content.contentID}} + '&txtMaxIndex=' + ${count.countSection}" style="font-size: 16px; display: inline-block;" th:text="${content.unitName}"></a>
+                                                </div>
+                                            </div>
+                                            <div th:if="${!LIST_QUIZ.isEmpty()}" th:each="quiz : ${LIST_QUIZ}">
+                                                <div th:if="${quiz.section.sectionID == section.sectionID && quiz.quizIndex == (i+1)}" style="padding: 10px">
+                                                    <i th:each="progress : ${LIST_PROGRESS}" th:if="${progress.quizuser.quiz.quizID == quiz.quizID}" style="color: #00c853" class="fas fa-check"></i>
+                                                    <a th:href="@{'doQuiz?quizid=' + ${quiz.quizID}} + '&txtMaxIndex=' + ${count.countSection}" style="font-size: 16px; display: inline-block;" th:text="${quiz.unitName}"></a>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:if="${USER.role.roleName != 'Leaner'}" class="reset-progress">
+                                <a th:href="@{'/reset-progress?txtCourseID=' + ${QUIZ.course.courseID}}">Reset Progress</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown edit" th:if="${USER.role.roleName != 'Leaner'}">
+                        <a th:href="@{'/add-quiz-form?txtCourseID=' + ${QUIZ.course.courseID}} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX} + '&txtShowQuestion=Show questions from this course'" class="dropbtn name__role"><span>Edit</span></a>
+                    </div>
+                    <div class="dropdown addOption" th:if="${USER.role.roleName != 'Leaner'}">
+                        <a href="#" class="dropbtn"><span>Add</span> <b class="carpet"></b></a>
+                        <div class="dropdown-content">
+                            <div class="add-content line-bottom">
+                                <a th:href="@{'/add-content-form?txtCourseID=' + ${QUIZ.course.courseID}} + '&txtContentID=0&txtMaxIndex=0'">Content</a>
+                                <a th:href="@{'/add-webcontent-form?txtCourseID=' + ${QUIZ.course.courseID}} + '&txtContentID=0&txtMaxIndex=0'">Web Content</a>
+                            </div>
+                            <div class="add-assignment">
+                                <a th:href="@{'/add-quiz-form?txtCourseID=' + ${QUIZ.course.courseID}} + '&txtContentID=0&txtMaxIndex=0&txtShowQuestion=Show questions from this course'">Test</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown more">
+                        <a href="#" class="dropbtn"><span>More</span> <b class="carpet"></b></a>
+                        <div class="dropdown-content">
+                            <div class="more-course line-bottom">
+                                <a th:if="${USER.role.roleName != 'Leaner'}" th:href="@{'/course-detail?txtCourseID=' + ${QUIZ.course.courseID} + '&txtURL=home'}" class="quiz__name">
+                                    Back to course
+                                </a>
+                                <a th:if="${USER.role.roleName == 'Leaner'}" href="/home-page" class="quiz__name">
+                                    Back to course
+                                </a>
+                            </div>
+                            <div class="log-out">
+                                <a th:href="@{/logout}">Log out</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div th:if="${ENROLLEMENT.isComplete}" class="dropdown cerfi__block">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="star-quiz">
+            <section class="question-area">
+                <div class="container">
+                    <input type="hidden" class="quizid" th:value="${QUIZ.quizID}"/>
+                    <input type="hidden" class="maxIndex" th:value="${MAX_INDEX}"/>
+                    <div class="question-wrap" th:each="question:${SHOWQUESTION}">
+                        <p class="question"  th:utext="${question.questionName}"></p>
+                        <div class="answer-wrap" th:each="answer:${SHOWANSWER}">
+                            <div class="answer" th:if="${question.questionID==answer.question.questionID}">
+                                <input type="radio" th:id="${answer.answerID}" th:name="${answer.question.questionID}" th:value="${answer.answerID}">
+                                <span class="box"></span>
+                                <span class="circle"></span>
+                                <span class="checkmark"></span>
+                                <label th:for="${answer.answerID}" class="text" th:text="${answer.answerContent}"></label>
+                            </div>
+                        </div>
+                        <div class="submit">
+                            <a class="btn-start">Submit answer</a>
+                            <div class="question-page">
+                                <span>Question</span>
+                                <span class="current-page">1</span>
+                                <span>of</span>
+                                <span class="total-page">4</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div class="certifi">
+            <div class="close"><i class="fas fa-times"></i></div>
+            <h2 class="certifi__title">Congratulations!</h2>
+            <div class="certifi__img">
+                <img src="img/course_completed.jpg" alt="completed">
+            </div>
+            <div class="certifi__name-course">
+                <h3>Course completed!</h3>
+                <h4>Give your course a name</h4>
+            </div>
+            <div class="certifi__option">
+                <a target="_blank" th:href="@{'/GenerateCerti?txtUserName=' + ${USER.username} + '&txtCourseID=' + ${QUIZ.course.courseID}}" class="certifi__download">Click here to view Certificate</a>
+                <a href="/home-page" class="certifi__listcourse">Go to home page</a>
+            </div>
+        </div>
+        <div class="overlay"></div>
+        <script src="js/startquiz.js"></script>
+        <script>
+            let cerfi__block = document.querySelector(".cerfi__block");
+            let btn__complete = document.querySelector(".btn_complete");
+            let overlay = document.querySelector(".overlay");
+            let certifi = document.querySelector(".certifi");
+            let close = document.querySelector(".certifi .close");
+
+            cerfi__block.addEventListener("click", function (e) {
+                e.stopPropagation();
+                overlay.classList.add("active");
+                certifi.classList.add("active");
+                document.querySelector("body").classList.add("active");
+            })
+
+            certifi.addEventListener("click", function (e) {
+                e.stopPropagation();
+            })
+            close.addEventListener("click", function (e) {
+                overlay.classList.remove("active");
+                certifi.classList.remove("active");
+                document.querySelector("body").classList.remove("active");
+            })
+
+            window.addEventListener("click", function () {
+                overlay.classList.remove("active");
+                certifi.classList.remove("active");
+                document.querySelector("body").classList.remove("active");
+            })
+        </script>
+    </body>
+</html>

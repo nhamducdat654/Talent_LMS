@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+            href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+            rel="stylesheet">
+
+</head>
+
+<body>
+<!-- Header  -->
+<header>
+    <div class="container d-flex justify-content-between align-items-center">
+        <a href="/home-page"><img src="img/talent_bigger.png"></a>
+        <div>
+            <div class="dropdown">
+                <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                <div class="dropdown-content">
+                    <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                    <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                    <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                </div>
+            </div>
+            <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                <div class="dropdown-content">
+                    <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                    <a href="/users"><i class="fa fa-user"></i>User</a>
+                    <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                    <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                    <hr>
+                    <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                    <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                </div>
+            </div>
+            <input type="text" placeholder="Search">
+            <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+        </div>
+    </div>
+</header>
+<!-- Header  -->
+<main class="listUser">
+    <section class="users editInfo">
+        <div class="container">
+            <div class="users__header">
+                <a href="/home-page">Home / </a>
+                <a href="/users">User /</a>
+                <span th:text="${USERDETAIL.username}"></span>
+            </div>
+            <div class="users__tab">
+                <div class="users__tab-title active">
+                    Info
+                </div>
+                <div class="users__tab-title">
+                    Courses
+                </div>
+            </div>
+            <div class="tag__content">
+                <div class="users__form tag__content-list tag__list-01 active">
+                    <form  th:action="@{/addOrUpdateUser}" method="POST" enctype="multipart/form-data">
+                        <div class="form__group-flex justify-content-between">
+                            <div class="form__group-left">
+                                <div class="form__title">
+                                    <span>First name</span>
+                                    <span>Last name</span>
+                                    <span>Email address</span>
+                                </div>
+                                <div class="form__input">
+                                    <input type="text"  name="firstName" th:value="${USERDETAIL.firstName}" required>
+                                    <input type="text"  name="lastName" th:value="${USERDETAIL.lastName}" required>
+                                    <input type="email"  name="email" th:value="${USERDETAIL.email}" required>
+                                </div>
+                            </div>
+                            <div class="form__group-right">
+                                <div class="avatar-user">
+                                    <img src="img/default_user2x.png" alt="">
+                                    <!--                                    <img th:src="${USER.userImg ? 'img/' + USER.userImg : 'img/default_user2x.png'}" alt="">-->
+                                </div>
+                                <input type="file" onchange="readURL(this);" id="files" name="image" th:value="${USERDETAIL.userImg}" class="form__input-file" accept="image/png, image/jpeg">
+                                <input type="text" name="actionUser" value="UpdateUser" style="visibility:hidden;"/>
+                                <span class="custom-input">Upload profile pic</span>
+                            </div>
+                        </div>
+                        <div class="form__group-flex pt-3 pb-3">
+                            <div class="form__title">
+                                <span>Username</span>
+                                <span>Password</span>
+                                <span>Bio</span>
+                            </div>
+                            <div class="form__input">
+                                <input type="text" name="username" th:value="${USERDETAIL.username}" readonly>
+                                <input type="password" name="password">
+                                <textarea name="bio" th:text="${USERDETAIL.bio}" id="" placeholder="Short description up to 800 characters"
+                                          rows="3">
+
+                                </textarea>
+                            </div>
+                        </div>
+                        <div th:switch="${USER.role.roleID}">
+                            <div th:case="ROLE_SUPERADMIN" class="form__group-flex">
+                                <div class="form__title">
+                                    <span>User type</span>
+                                </div>
+                                <div class="form__input">
+                                    <div th:switch="${USERDETAIL.roleId}">
+                                        <select th:case="ROLE_LEANER" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option>SuperAdmin</option>
+                                            <option>Admin-Type</option>
+                                            <option>Trainer-Type</option>
+                                            <option selected>Learner-Type</option>
+                                        </select>
+                                        <select th:case="ROLE_INSTRUCTOR" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option>SuperAdmin</option>
+                                            <option>Admin-Type</option>
+                                            <option selected>Trainer-Type</option>
+                                            <option >Learner-Type</option>
+                                        </select>
+                                        <select th:case="ROLE_ADMIN" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option>SuperAdmin</option>
+                                            <option selected>Admin-Type</option>
+                                            <option>Trainer-Type</option>
+                                            <option >Learner-Type</option>
+                                        </select>
+                                        <select th:case="ROLE_SUPERADMIN" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option selected>SuperAdmin</option>
+                                            <option>Admin-Type</option>
+                                            <option>Trainer-Type</option>
+                                            <option >Learner-Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:case="ROLE_ADMIN" class="form__group-flex">
+                                <div class="form__title">
+                                    <span>User type</span>
+                                </div>
+                                <div class="form__input">
+                                    <div th:switch="${USERDETAIL.roleId}">
+                                        <select th:case="ROLE_LEANER" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option>SuperAdmin</option>
+                                            <option>Admin-Type</option>
+                                            <option>Trainer-Type</option>
+                                            <option selected>Learner-Type</option>
+                                        </select>
+                                        <select th:case="ROLE_INSTRUCTOR" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option>SuperAdmin</option>
+                                            <option>Admin-Type</option>
+                                            <option selected>Trainer-Type</option>
+                                            <option >Learner-Type</option>
+                                        </select>
+                                        <select th:case="ROLE_ADMIN" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option>SuperAdmin</option>
+                                            <option selected>Admin-Type</option>
+                                            <option>Trainer-Type</option>
+                                            <option >Learner-Type</option>
+                                        </select>
+                                        <select th:case="ROLE_SUPERADMIN" name="role" class="form-control form-control-lg" style="font-size: 13px;
+                                                margin: 5px 0px;">
+                                            <option selected>SuperAdmin</option>
+                                            <option>Admin-Type</option>
+                                            <option>Trainer-Type</option>
+                                            <option >Learner-Type</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:case="ROLE_INSTRUCTOR">
+                                <input type="hidden" name="role" value="Trainer-Type">
+                            </div>
+                            <div th:case="ROLE_LEANER">
+                                <input type="hidden" name="role" value="Learner-Type">
+                            </div>
+                        </div>
+                        <p style="color:red" th:text="${EXIST}"></p>
+                        <div class="form__btn">
+                            <input type="submit" class="btn btn-primary" value="Update user">
+                            <span>or</span>
+                            <a href="">cancel</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="tag__content-list tag__list-02 ">
+                    <div th:switch="${USER.role.roleID}" class="users__table course-table check-table ">
+                        <table >
+                            <tr>
+                                <th class="tb_paddingleft">
+                                    course
+                                </th>
+                                <th class="tb_textalgin_center">
+                                    role
+                                </th>
+                                <th class="tb_textalgin_center">
+                                    enrolled on
+                                </th>
+                                <th class="tb_textalgin_center">
+                                    completion date
+                                </th>
+                                <th class="tb_textalgin_center" style="width: 250px;">
+                                    option
+                                </th>
+
+                            </tr>
+                            <div th:case="ROLE_SUPERADMIN">
+                                <tr th:each="course: ${LISTCOURSE}" style="height: 50px;">
+                                    <td class="tb_paddingleft" th:text="${course.courseName}"></td>
+
+                                    <div th:switch="${course.roleName} ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${course.roleName}" ></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}" ></td>
+                                    </div>
+
+                                    <div th:switch="${course.enroll_date}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.enroll_date, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.date_complete}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.date_complete, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.roleName}  ? ${true} : ${false}">
+                                        <td th:case="${false}" class="tb_textalgin_center ">
+                                            <div>
+                                                <a th:href="@{/enroll/add(idCourse=${course.courseId}, username=${USERDETAIL.username})}"><i class="icon-flagicon">
+                                                    <img src="img/plus.svg" alt=""></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <div th:case="${true}">
+                                            <td class="tb_active tb_textalgin_center ">...</td>
+                                            <div>
+
+                                                <td class="tb_option_layout hidden">
+                                                    <div th:switch="${course.date_complete} ? ${true} : ${false}">
+                                                        <a th:href="@{/enroll/update(idEnroll=${course.enrollId}, courseID=${course.courseId}, username=${USERDETAIL.username})}" th:case="${true}">
+                                                            <i class="icon-flagicon"><img src="img/refresh.svg" alt=""></i>
+                                                        </a>
+                                                        <span th:case="${false}"></span>
+                                                        <a th:href="@{/enroll/remove(idEnroll=${course.enrollId})}">
+                                                            <i class="icon-flagicon"><img src="img/subtract.svg" alt=""></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </tr>
+                            </div>
+                            <div th:case="ROLE_ADMIN">
+                                <tr th:each="course: ${LISTCOURSE}" style="height: 50px;">
+                                    <td class="tb_paddingleft" th:text="${course.courseName}"></td>
+
+                                    <div th:switch="${course.roleName} ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${course.roleName}" ></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}" ></td>
+                                    </div>
+
+                                    <div th:switch="${course.enroll_date}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.enroll_date, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.date_complete}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.date_complete, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.roleName}  ? ${true} : ${false}">
+                                        <td th:case="${false}" class="tb_textalgin_center ">
+                                            <div>
+                                                <a th:href="@{/enroll/add(idCourse=${course.courseId}, username=${USERDETAIL.username})}"><i class="icon-flagicon">
+                                                    <img src="img/plus.svg" alt=""></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <div th:case="${true}">
+                                            <td class="tb_active tb_textalgin_center ">...</td>
+                                            <div>
+
+                                                <td class="tb_option_layout hidden">
+                                                    <div th:switch="${course.date_complete} ? ${true} : ${false}">
+                                                        <a th:href="@{/enroll/update(idEnroll=${course.enrollId})}" th:case="${true}">
+                                                            <i class="icon-flagicon"><img src="img/refresh.svg" alt=""></i>
+                                                        </a>
+                                                        <span th:case="${false}"></span>
+                                                        <a th:href="@{/enroll/remove(idEnroll=${course.enrollId})}">
+                                                            <i class="icon-flagicon"><img src="img/subtract.svg" alt=""></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </tr>
+                            </div>
+                            <div th:case="ROLE_INSTRUCTOR">
+                                <tr th:each="course: ${LISTCOURSE}" style="height: 50px;">
+                                    <td class="tb_paddingleft" th:text="${course.courseName}"></td>
+
+                                    <div th:switch="${course.roleName} ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${course.roleName}" ></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}" ></td>
+                                    </div>
+
+                                    <div th:switch="${course.enroll_date}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.enroll_date, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.date_complete}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.date_complete, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.roleName}  ? ${true} : ${false}">
+                                        <td th:case="${false}" class="tb_textalgin_center ">
+                                            <div>
+                                                <a th:href="@{/enroll/add(idCourse=${course.courseId}, username=${USERDETAIL.username})}"><i class="icon-flagicon">
+                                                    <img src="img/plus.svg" alt=""></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <div th:case="${true}">
+                                            <td class="tb_active tb_textalgin_center ">...</td>
+                                            <div>
+
+                                                <td class="tb_option_layout hidden">
+                                                    <div th:switch="${course.date_complete} ? ${true} : ${false}">
+                                                        <a th:href="@{/enroll/update(idEnroll=${course.enrollId})}" th:case="${true}">
+                                                            <i class="icon-flagicon"><img src="img/refresh.svg" alt=""></i>
+                                                        </a>
+                                                        <span th:case="${false}"></span>
+                                                        <a th:href="@{/enroll/remove(idEnroll=${course.enrollId})}">
+                                                            <i class="icon-flagicon"><img src="img/subtract.svg" alt=""></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </tr>
+                            </div>
+                            <div th:case="ROLE_LEANER">
+                                <tr th:each="course: ${LISTCOURSE}" th:if="${course.roleName != null && course.enroll_date != null}" style="height: 50px">
+                                    <td class="tb_paddingleft" th:text="${course.courseName}"></td>
+
+                                    <div th:switch="${course.roleName} ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${course.roleName}" ></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}" ></td>
+                                    </div>
+
+                                    <div th:switch="${course.enroll_date}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.enroll_date, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.date_complete}  ? ${true} : ${false}">
+                                        <td class="tb_textalgin_center" th:case="${true}" th:text="${#temporals.format(course.date_complete, 'dd-MM-yyyy')}"></td>
+                                        <td class="tb_textalgin_center" th:case="${false}" th:text="${'-'}"></td>
+                                    </div>
+
+                                    <div th:switch="${course.roleName}  ? ${true} : ${false}">
+                                        <td th:case="${false}" class="tb_textalgin_center ">
+                                            <div>
+                                                <a th:href="@{/enroll/add(idCourse=${course.courseId}, username=${USERDETAIL.username})}"><i class="icon-flagicon">
+                                                    <img src="img/plus.svg" alt=""></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <div th:case="${true}">
+                                            <td class="tb_active tb_textalgin_center ">...</td>
+                                            <div>
+
+                                                <td class="tb_option_layout hidden">
+                                                    <div th:switch="${course.date_complete } ? ${true} : ${false}">
+
+                                                        <span th:case="${false}"></span>
+                                                        <a th:href="@{/enroll/remove(idEnroll=${course.enrollId})}">
+                                                            <i class="icon-flagicon"><img src="img/subtract.svg" alt=""></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </tr>
+                            </div>
+
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+<script th:src="@{/js/jquery-3.6.0.min.js}"></script>
+<script th:src="@{/js/index.js}"></script>
+
+</body>
+
+</html>

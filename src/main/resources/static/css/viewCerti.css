@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+form{
+    background-image: url("/img/certifi.jpg");
+    background-size: 100% 100%;
+    border: none;
+    height: 90%;
+}
+#create_pdf{
+    cursor: pointer;
+    background-color: #000fe6;
+    width: max-content;
+    padding: 8px;
+    outline: none;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    transition: 0.5s;
+}
+
+.option-mid{
+    width: max-content;
+    margin: 20px auto;
+}
+
+#create_pdf:hover{
+    background-color: #1c2bfa;
+}
+
+.viewCerti-wrap{
+    height: 100vh;
+}

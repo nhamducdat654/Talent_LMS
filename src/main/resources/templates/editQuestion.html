@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Edit question</title>
+        <link rel="stylesheet" href="css/quiz.css">
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+            rel="stylesheet" />
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet"
+              href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap"
+            rel="stylesheet">
+
+    </head>
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleID == 'r01'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+
+        <main>
+            <section class="add-questions">
+                <div class="container">
+                    <div class="add-wrapper">
+                        <div class="quiz__menu">
+                            <a href="/home-page" class="quiz__menu-link">Home</a>
+                            <div class="quiz__menu-plash">/</div>
+                            <a class="quiz__menu-link" th:href="@{'course-detail?txtCourseID=' + ${COURSE.courseID} + '&txtURL=home'}" th:text="${COURSE.courseName}"></a>
+                            <div class="quiz__menu-plash">/</div>
+                            <a th:if="${QUIZ == null}" th:href="@{'/add-quiz-form?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=0&txtMaxIndex=0&txtShowQuestion=Show questions from this course'}" class="quiz__menu-link">New Test</a>
+                            <a th:href="@{'/add-quiz-form?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX} + '&txtShowQuestion=Show questions from this course'}"
+                               th:if="${QUIZ != null}" th:text="${QUIZ.unitName}" class="quiz__menu-link"></a>
+                            <div class="quiz__menu-plash">/</div>
+                            <a class="quiz__menu-link active">Add Question</a>
+                        </div>
+                        <form name="myForm" th:action="@{saveOrUpdate}" method="POST" th:object= "${question}" id = "mainForm">
+                            <input type="hidden" name="txtCourseID" th:value="${COURSE.courseID}"/>
+                            <input th:if="${QUIZ == null}" type="hidden" name="txtContentID" value="0"/>
+                            <input th:if="${QUIZ == null}" type="hidden" name="txtMaxIndex" value="0"/>
+                            <input th:if="${QUIZ != null}" type="hidden" name="txtContentID" th:value="${QUIZ.quizID}"/>
+                            <input th:if="${QUIZ != null}" type="hidden" name="txtMaxIndex" th:value="${MAX_INDEX}"/>
+
+
+                            <input type="hidden" th:value ="${question.questionID}" name = "txtQuestionID"/>
+                            <div id="toolbar-container"></div>
+                            <!-- This container will become the editable. -->
+                            <div id="editor" th:utext ="${question.questionName}"></div>
+                            <input type="hidden" th:field ="*{questionName}" id = "txtQuestionName" >
+
+                            <p ></p>
+                            <p class = "errorQuestion" style = "color:red;font-style: italic;padding:10px;"></p>
+                            <div class="answer-add line">
+
+                                <div class="answer-form" th:if ="*{questionID <0}">
+
+                                    <div class="form-input">
+
+                                        <input type="text" name="txtAnswerContent" id="ipAnswer" required>
+                                        <input type="checkbox" name="txtCheck" value="true-0" id="check"> <span>correct</span>
+
+                                        <i class="fas fa-trash"></i>
+
+                                    </div>
+                                    <div class="form-input">
+
+                                        <input type="text" name="txtAnswerContent" id="ipAnswer" required>
+                                        <input type="checkbox" name="txtCheck" value="true-1" id="check"> <span>correct</span>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                    <div class="form-input">
+
+                                        <input type="text" name="txtAnswerContent" id="ipAnswer"required>
+                                        <input type="checkbox" name="txtCheck" value="true-2" id="check"> <span>correct</span>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                    <div class="form-input">
+
+                                        <input type="text" name="txtAnswerContent" id="ipAnswer" required>
+                                        <input type="checkbox" name="txtCheck" value="true-3" id="check"> <span>correct</span>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                </div>
+                                <p class = "errorAnswer" style = "color:red"></p>
+                                <p style="color:red" th:text = "${errCheck}"></p>
+                                <div class="answer-form" th:if ="*{questionID >0}">
+                                    <div class="form-input" th:each ="que,state : ${answer}">
+                                        <input type="text" name="txtAnswerContent" id="ipAnswer" th:value = "${que.answerContent}" required>
+                                        <input type="checkbox" name="txtCheck" th:value="${que.isTrue}+'-'+${state.index}" id="check" th:checked = "${que.isTrue}"> <span>correct</span>
+                                        <i class="fas fa-trash"></i>
+                                    </div>
+                                    <p class = "errorAnswer" style = "color:red"></p>
+                                </div>
+
+                                <div class="btn-add">Add Answer</div>
+
+                            </div>
+
+                            <div class="save ">
+                                <div class="show-options">
+                                    <input type="hidden" class = "continue" name = "continue" value ="false" />
+                                    <input type="submit" style="width:max-content;color:white; background-color: #003de6; border: none; border-radius: 5px 0 0 5px;padding: 5px" name="save" value="Save and view" onclick ="changeContinue();getEditor();return validate()">
+                                    <i class="fas fa-sort-down" style="padding: 8px;border:1px solid #003de6"></i>
+                                    <p>or</p>
+                                    <a th:href="@{'/add-quiz-form?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=0&txtMaxIndex=0&txtShowQuestion=Show questions from this course'}"
+                                       th:if="${QUIZ == null}" class="cancel">cancel</a>
+                                    <a th:href="@{'/add-quiz-form?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX} + '&txtShowQuestion=Show questions from this course'}"
+                                       th:if="${QUIZ != null}" class="cancel">cancel</a>
+                                    <div class="more">
+                                        <input type="submit"  name= "save"  class="option" onclick ="changeContinue();getEditor();return validate()" value = "and add another"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+
+            <script src="https://cdn.ckeditor.com/ckeditor5/12.3.1/classic/ckeditor.js"></script>
+            <script src="js/addQuestion.js"></script>
+            <script>
+                                            let editor;
+
+                                            ClassicEditor.create(document.querySelector("#editor"))
+                                                    .then((newEditor) => {
+                                                        editor = newEditor;
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error(error);
+                                                    });
+
+                                            function getEditor() {
+                                                const editorData = editor.getData();
+                                                document.getElementById("txtQuestionName").value = editorData;
+                                            }
+
+                                            function changeContinue() {
+                                                document.querySelector(".save .continue").setAttribute("value", "false");
+                                            }
+
+
+                                            function validate() {
+                                                let questionName = editor.getData();
+                                                if (validateDub() == false) {
+                                                    return false;
+                                                }
+
+                                                if (questionName == "") {
+                                                    document.querySelector(".errorQuestion").innerHTML = "Input question name";
+
+                                                    return false;
+                                                }
+                                                var cbox = document.forms["myForm"]["check"];
+                                                let countChek = 0;
+                                                cbox.forEach(function (item, index) {
+
+                                                    if (item.checked == true) {
+                                                        countChek++;
+                                                    }
+
+                                                })
+
+                                                if (
+                                                        cbox[0].checked == false &&
+                                                        cbox[1].checked == false &&
+                                                        cbox[2].checked == false &&
+                                                        cbox[3].checked == false
+                                                        ) {
+                                                    alert("Please Select one corrrect answer!!!");
+                                                    return false;
+                                                } else if (countChek != 1) {
+                                                    alert("Select one corrrect answer!!!");
+                                                    countChek = 0;
+                                                    return false;
+                                                } else {
+                                                    return true;
+                                                }
+                                            }
+
+                                            function validateDub() {
+                                                let inputQuestion = document.querySelectorAll("#ipAnswer");
+                                                checkDub = true;
+                                                for (var i = 0; i < inputQuestion.length; i++) {
+                                                    for (var j = i + 1; j < inputQuestion.length; j++) {
+                                                        if (inputQuestion[i].value.trim() == inputQuestion[j].value.trim() && inputQuestion[i].value.trim() != "") {
+                                                            document.querySelector(".errorAnswer").innerHTML = "Answer Duplicate!!!";
+                                                            checkDub = false;
+
+                                                            break;
+                                                        }
+
+                                                    }
+                                                }
+                                                if (checkDub == false) {
+
+                                                    return false;
+                                                } else {
+
+                                                    return true;
+                                                }
+                                            }
+            </script>
+    </body>
+</html>

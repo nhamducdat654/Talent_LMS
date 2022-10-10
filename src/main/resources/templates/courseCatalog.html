@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Course Catalog</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section>
+                <div class="container">
+                    <div class="course__menu">
+                        <a href="/home-page" class="course__menu-link">Home</a>
+                        <div class="course__menu-plash">/</div>
+                        <a class="course__menu-link active">Course Catalog</a>
+                    </div>
+                    <div class="course__main">
+                        <div class="course__content">
+                            <div class="couse__content-wrap">
+                                <div class="course__option">
+                                    <input type="text" name="" id="searchCourse" onkeyup="keyupSearchCourse()" class="course__search" placeholder="Search courses">
+                                    <div class="course__function">
+                                        <div class="course__sort">
+                                            <div class="course__sort-current">
+                                                <i class="fas fa-layer-group"></i>
+                                                <span>Name</span>
+                                            </div>
+                                            <div class="course__sort-option">
+                                                <a class="active" onclick="sortByName()">Name</a>
+                                                <a onclick="sortByPrice()">Price</a>
+                                            </div>
+                                        </div>
+                                        <div class="course__view">
+                                            <button class="active"><i class="fas fa-th-list"></i></button>
+                                            <button><i class="fas fa-th"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="course__content-list" id="course__content-list">
+                                    <form th:action="course-detail" th:each="course : ${COURSE_CATALOG}" class="course-detail">
+                                        <input type="hidden" name="txtURL" value="catalog"/>
+                                        <div class="course__content-item" onclick="this.parentNode.submit()">
+                                            <input type="hidden" name="txtCourseID" th:value="${course.courseID}">
+                                            <div class="course__content-left">
+                                                <div class="course__img" th:if="${course.courseImg == null}">
+                                                    <img src="img/unknown_big.png" alt="photo1">
+                                                </div>
+                                                <div class="course__img" th:if="${course.courseImg != null}">
+                                                    <img th:src="${course.courseImg}" alt="photo1">
+                                                </div>
+                                                <div th:each="myCourse : ${MY_COURSE}">
+                                                    <a th:if="${myCourse.courseID == course.courseID}">You have this course</a>
+                                                </div>
+                                                <div th:each="not_own : ${NOT_OWN}">
+                                                    <a style="background-color: #003de6; color: white;" th:if="${not_own == course.courseID}">Get this course</a>
+                                                </div>
+                                            </div>
+                                            <div class="course__content-right">
+                                                <h4 class="course__type" th:text="${course.category.categoryName}"></h4>
+                                                <div class="course__title">
+                                                    <span class="main__title" th:text="${course.courseName}"></span>
+                                                </div>
+                                                <p class="course__desc" th:text="${course.courseDes}"></p>
+                                                <div th:if="${course.price > 0}" class="courseCata__price" th:text="${course.price}+' $'"></div>
+                                                <div th:if="${course.price == 0}" style="display: none;" class="courseCata__price" th:text="${0} + ' $'"></div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="course__content-categories">
+                                <div class="categories__title">
+                                    <a href="">Categories</a>
+                                </div>
+                                <ul class="categories__list">
+                                    <li class="categories__item" th:each="cate : ${CATEGORY_CATALOG}"><a href="" th:onclick="searchByCategory([[${cate.categoryName}]])" style="font-size: 15px" th:text="${cate.categoryName}"></a><span style="font-size: 10px" th:text="${' ('+cate.countCategory+')'}"></span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="another">
+                        <span class="another__upgrade">Upgrade <i class="fas fa-lock"></i></span>
+                        <span class="another__version">TalentLMS 4.8</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script>
+            let sortascprice = true;
+            var $sortasc_price,
+                    getSortAscPrice = function (selector) {
+                        sortascprice = false;
+                        return $(
+                                $(selector).toArray().sort(function (a, b) {
+                            var aVal = parseInt(a.getElementsByClassName("courseCata__price")[0].innerText),
+                                    bVal = parseInt(b.getElementsByClassName("courseCata__price")[0].innerText);
+                            return aVal - bVal;
+                        })
+                                );
+                    };
+
+            var $sortdes_price,
+                    getSortDesPrice = function (selector) {
+                        sortascprice = true;
+                        return $(
+                                $(selector).toArray().sort(function (a, b) {
+                            var aVal = parseInt(a.getElementsByClassName("courseCata__price")[0].innerText),
+                                    bVal = parseInt(b.getElementsByClassName("courseCata__price")[0].innerText);
+                            return bVal - aVal;
+                        })
+                                );
+                    };
+
+            function sortByPrice() {
+                if (sortascprice) {
+                    $sortasc_price = getSortAscPrice('#course__content-list .course-detail').clone();
+                    $('#course__content-list').html($sortasc_price);
+                } else {
+                    $sortdes_price = getSortDesPrice('#course__content-list .course-detail').clone();
+                    $('#course__content-list').html($sortdes_price);
+                }
+            }
+            
+            let sortascname = true;
+            var $sortasc_name,
+                    getSortAscName = function (selector) {
+                        sortascname = false;
+                        return $(
+                                $(selector).toArray().sort(function (a, b) {
+                            var aVal = a.getElementsByClassName("course__title")[0].innerText,
+                                    bVal = b.getElementsByClassName("course__title")[0].innerText;
+                            return (aVal < bVal) ? -1 : (aVal > bVal) ? 1 : 0;
+                        })
+                                );
+                    };
+
+            var $sortdes_name,
+                    getSortDesName = function (selector) {
+                        sortascname = true;
+                        return $(
+                                $(selector).toArray().sort(function (a, b) {
+                            var aVal = a.getElementsByClassName("course__title")[0].innerText,
+                                    bVal = b.getElementsByClassName("course__title")[0].innerText;
+                            return (aVal > bVal) ? -1 : (aVal < bVal) ? 1 : 0;
+                        })
+                                );
+                    };
+
+            function sortByName() {
+                if (sortascname) {
+                    $sortasc_name = getSortAscName('#course__content-list .course-detail').clone();
+                    $('#course__content-list').html($sortasc_name);
+                } else {
+                    $sortdes_name = getSortDesName('#course__content-list .course-detail').clone();
+                    $('#course__content-list').html($sortdes_name);
+                }
+            }
+
+            let listCategory = [];
+            function searchByCategory(cateName) {
+                if (listCategory.length == 0) {
+                    listCategory.push(cateName.toUpperCase());
+                } else {
+                    let flag = true;
+                    listCategory.forEach(function (item) {
+                        if (item == cateName.toUpperCase()) {
+                            let pos = listCategory.findIndex(item => item == cateName.toUpperCase());
+                            listCategory.splice(pos, 1);
+                            flag = false;
+                        }
+                    });
+                    if (flag) {
+                        listCategory.push(cateName.toUpperCase());
+                    }
+                }
+
+                var li, a, i, txtValue;
+                if (listCategory.length == 0) {
+                    li = document.getElementsByClassName("course-detail");
+                    for (i = 0; i < li.length; i++) {
+                        a = li[i].getElementsByClassName("course__type")[0];
+                        txtValue = a.textContent || a.innerText;
+                        if (txtValue.toUpperCase().indexOf("") > -1) {
+                            li[i].style.display = "block";
+                        } else {
+                            li[i].style.display = "none";
+                        }
+                    }
+                } else {
+                    li = document.getElementsByClassName("course-detail");
+                    for (i = 0; i < li.length; i++) {
+                        let flag2 = true;
+                        a = li[i].getElementsByClassName("course__type")[0];
+                        txtValue = a.textContent || a.innerText;
+                        for (var j = 0; j < listCategory.length; j++) {
+                            if (txtValue.toUpperCase().indexOf(listCategory[j]) > -1) {
+                                li[i].style.display = "block";
+                                flag2 = false;
+                            }
+                        }
+                        if (flag2) {
+                            li[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <script src="js/index.js"></script>
+    </body>
+
+</html>

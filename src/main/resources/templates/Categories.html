@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>View Category</title>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    </head>
+
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section>
+                <div class="container">
+                    <div class="course__menu">
+                        <a href="/home-page" class="course__menu-link">Home</a>
+                        <div class="course__menu-plash">/</div>
+                        <a class="course__menu-link active">Category</a>
+                    </div>
+                    <div class="course__main">
+                        <div class="course__add">
+                            <div class="course__add-right">
+                                <a th:href="addcategoryform" class="--add">Add category</a>
+                            </div>
+                            <a href="/course-catalog" class="--view-catalog"><i class="fas fa-share"></i>View course catalog</a>
+                        </div>
+                        <table class="course__list">
+                            <tr>
+                                <th>Name</th>
+                                <th>Options</th>
+                            </tr>
+                            <tr id="list-cate" th:each="category:${listcategory}">
+                                <td class="cateName">
+                                    <a th:href="'/editcategoryform?id='+${category.categoryID}" th:text="${category.categoryName}"></a></td>
+                                <td><i class="fas fa-ellipsis-h --threedot"></i>
+                                    <div class="option__course">
+                                        <a th:href="'/editcategoryform?id='+${category.categoryID}"><i class="fas fa-pencil-alt"></i></a>
+                                        <a th:href="'/deletecategory?id='+${category.categoryID}"><i class="fas fa-times"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div class="course__paging">
+                            <div class="course__paging-more" style="background-color: white"></div>
+                            <div class="course__filter">
+                                <input type="text" id="searchMyCategory" placeholder="Search"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="another">
+                        <span class="another__upgrade">Upgrade <i class="fas fa-lock"></i></span>
+                        <span class="another__version">TalentLMS 4.8</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script>
+            document.getElementById("searchMyCategory").addEventListener("input", () => {
+                
+                let input = document.getElementById("searchMyCategory").value;
+                li = document.querySelectorAll("#list-cate");
+                         
+                for (let i = 0; i < li.length; i++) {
+                    let value = li[i].getElementsByClassName("cateName")[0].innerHTML;
+                    if (input.length > 0) {
+                        if (!value.toUpperCase().includes(input.toUpperCase())) {
+                            li[i].style.display = "none";
+                        } else {
+                            li[i].style.display = "";
+                        }
+                    } else {
+                        li[i].style.display = "";
+                    }
+
+                }
+            })
+        </script>
+        <script src="js/index.js"></script>
+    </body>
+
+</html>

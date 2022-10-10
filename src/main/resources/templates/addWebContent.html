@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Add Web content</title>
+        <link rel="stylesheet" href="css/addWebContent.css" />
+        <link rel="stylesheet" href="css/style.css" />
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+        <style>
+            .btn-success{
+                margin-bottom: 7px;
+            }
+
+            #txtSection {
+                width: 220px;
+                border-radius: 4px;
+                border: 1px solid #9999a6;
+                height: 30px;
+                padding: 5px;
+                box-shadow: 0 0 10px #dddddd, 0 0 10px #eeeeee;
+            }
+
+            #txtSection:focus {
+                outline: none;
+                background-color: #eeeeee;
+                border-bottom-left-radius: 0px;
+            }
+
+            .section input::placeholder {
+                color: #9999a6;
+                font-size: 14px;
+            }
+
+            .section input {
+                margin-left: 20px;
+            }
+
+            .section a:hover {
+                cursor: pointer;
+            }
+
+            .icon_down {
+                background-color: red;
+                width: 20px;
+                height: 30px;
+                border: 1px solid red;
+                background-color: #dddddd;
+                position: absolute;
+                left: 300;
+            }
+
+            .icon_down i {
+                font-size: 14px;
+                color: #8a8a8a;
+            }
+
+            #txtSection:focus+#btn_down .fa-caret-up {
+                display: block;
+            }
+
+            #txtSection:focus+#btn_down .fa-caret-down {
+                display: none;
+            }
+
+            #btn_down .fa-caret-up {
+                display: none;
+            }
+
+
+
+            .section {
+                margin-bottom: 20px;
+            }
+
+            #txtSection:focus~#contet_Cate {
+                display: block;
+            }
+
+            .section_content {
+                border: 1px solid red;
+                width: 220px;
+                margin-left: 80px;
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+                border: 1px solid #3875d7;
+                position: absolute;
+                top: 212px;
+                display: none;
+                background-color: white;
+            }
+
+            .section_content input {
+                width: 90%;
+                margin-left: 10px;
+                outline: none;
+                margin-top: 5px;
+                border: 1px solid #3875d7;
+                height: 30px;
+            }
+
+            .section_content input:focus {
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.25), 0 0 10px rgba(0, 123, 255, 0.25);
+            }
+
+            .fa-search {
+                position: absolute;
+                left: 180px;
+                top: 10px;
+            }
+
+            .section_content h6 {
+                color: black;
+                margin-left: 10px;
+                padding-left: 5px;
+                padding-top: 5px;
+                width: 90%;
+                margin-top: 5px;
+                height: 30px;
+                cursor: pointer;
+            }
+
+            .sub_option button{
+                text-align: left;
+            }
+            .sub_option button:hover{
+                text-decoration: none;
+            }
+
+            .section_content h6:hover {
+                background-color: #3875d7;
+                color: white;
+            }
+        </style>
+    </head>
+    <body style="background-color: #f3f3f3">
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section>
+                <div class="container">
+                    <div class="course__menu">
+                        <a href="/home-page" class="course__menu-link">Home</a>
+                        <div class="course__menu-plash">/</div>
+                        <a class="course__menu-link" th:href="@{'course-detail?txtCourseID=' + ${COURSE.courseID} + '&txtURL=home'}" th:text="${COURSE.courseName}"></a>
+                        <div class="course__menu-plash">/</div>
+                        <a class="course__menu-link active" th:if="${CONTENT_DETAIL == null}">Add Web content</a>
+                        <a class="course__menu-link active" th:if="${CONTENT_DETAIL != null}" th:text="${CONTENT_DETAIL.unitName}"></a>
+                    </div>
+                    <div class="content_detail">
+                        <form action="add-webcontent" th:if="${CONTENT_DETAIL == null}">
+                            <input type="hidden" name="txtContentIndex" value="0">
+                            <input type="hidden" name="txtContentID" value="0">
+                            <input type="hidden" name="txtSectionID" id="txtSectionID">
+                            <input type="hidden" name="txtSelect" id="txtSelect">
+                            <input type="hidden" name="txtCourseID" th:value="${COURSE.courseID}">
+
+                            <div class="add_content_detail">
+                                <label for="txtUnitName">Unit name</label>
+                                <input type="text" id="txtUnitName" name="txtUnitName" placeholder="Unit name" maxlength="80" required/>
+                                <input type="button" value="80" readonly id="rangeInput"/>
+                            </div>
+                            <div class="add_content_detail section">
+                                <label for="Section">Section</label>
+                                <input type="text" id="txtSection" placeholder="Select a section" readonly/>
+                                <a onclick="document.getElementById('txtSection').value = ''; document.getElementById('xBtn').style.display = 'none';" style="position:absolute;z-index:9;left:480px;line-height:28px;display: none; color: black; font-size: 15px;"id="xBtn"><i class="fa fa-times"></i></a>
+                                <button id="btn_down" class="icon_down">
+                                    <i class="fa fa-caret-down"></i>
+                                    <i class="fa fa-caret-up"></i>
+                                </button>
+                                <div class="section_content" id="contet_Cate" style="display: none; z-index: 2;">
+                                    <div th:if="${COURSE_SECTION.isEmpty()}">
+                                        This course hasn't section yet.
+                                    </div>
+                                    <div class="sub_section_content" th:each="listSection : ${COURSE_SECTION}">
+                                        <h6 th:onclick="getSection([[${listSection.sectionID}]], [[${listSection.sectionName}]])" id="section" th:text="${listSection.sectionName}"></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr width="100%" size="3px" style="z-index: 1;"/>
+                            <div class="add_web_content_url">
+                                <label for="txtUrlAddress">Web address (URL) </label>
+                                <input type="text" id="txtUrlAddress" name="txtUrlAddress" placeholder="Start writing for suggestions or patse a URL" required/>
+                                <input type="button" onclick="loadPage()" class="btn btn-success btn_load" value="Load"/>
+                                <p>Use URLs from: Youtube, Vimeo, Wistia, Wikipedia, Slideshare, Scribd, Prezi, Flickr</p>
+                                <div style="margin-left: 144px; display: none; color: red; font-style: italic;" id="invalidWebPage">URL is invalid</div>
+                                <div style="margin-left: 144px; display: none;" id="webpage">
+                                    <object class="object-webpage" type="text/html" data="" width="1100px" height="600px" style="overflow:auto;border:5px ridge blue">
+                                    </object>
+                                </div>
+                            </div>
+                            <hr width="100%" size="3px" align="center" color="red" />
+                            <div class="save_content">
+                                <button type="submit" class="btnSave btn btn-primary" onclick="getURL('view')">Save and View</button>
+                                <a class="btnOption btn btn-primary saveAndSelect" style="color: white"><i class="fa fa-caret-down"></i></a>
+                                or
+                                <a th:href="@{'course-detail?txtCourseID=' + ${COURSE.courseID} + '&txtURL=home'}">cancel</a>
+                                <div class="sub_option" id="sub_option" style="display: none;">
+                                    <button type="submit" onclick="getURL('backUnitList')">and back to units list</button>
+                                    <button type="submit" onclick="getURL('addAnother')">and add another</button>
+                                </div>
+                            </div>
+                        </form>
+                        <form action="add-webcontent" th:if="${CONTENT_DETAIL != null}">
+                            <input type="hidden" name="txtContentID" th:value="${CONTENT_DETAIL.contentID}">
+                            <input type="hidden" name="txtSectionID" id="txtSectionID" th:value="${CONTENT_DETAIL.section.sectionID}">
+                            <input type="hidden" name="txtSelect" id="txtSelect">
+                            <input type="hidden" name="txtCourseID" th:value="${COURSE.courseID}">
+
+                            <div class="add_content_detail">
+                                <label for="txtUnitName">Unit name</label>
+                                <input type="text" id="txtUnitName" name="txtUnitName" placeholder="Unit name" maxlength="80" th:value="${CONTENT_DETAIL.unitName}" required/>
+                                <input type="button" value="80" readonly id="rangeInput"/>
+                            </div>
+                            <div class="add_content_detail section">
+                                <label for="Section">Section</label>
+                                <input type="text" id="txtSection" placeholder="Select a section" th:value="${CONTENT_DETAIL.section.sectionName}" readonly/>
+                                <a th:onclick="xSection([[${COUNT_NULL}]], [[${CONTENT_DETAIL.section.sectionID}]])" style="display: none; color: black; font-size: 15px;"id="xBtn"><i class="fa fa-times"></i></a>
+                                <button type="button" id="btn_down" class="icon_down">
+                                    <i class="fa fa-caret-down"></i>
+                                    <i class="fa fa-caret-up"></i>
+                                </button>
+                                <div class="section_content" id="contet_Cate" style="display: none; z-index: 2;">
+                                    <div th:if="${COURSE_SECTION.isEmpty()}">
+                                        This course hasn't section yet.
+                                    </div>
+                                    <div class="sub_section_content" th:each="listSection : ${COURSE_SECTION}">
+                                        <h6 th:onclick="getSection([[${listSection.sectionID}]], [[${listSection.sectionName}]], [[${listSection.countSection}]], [[${CONTENT_DETAIL.section.sectionID}]])" id="section" th:text="${listSection.sectionName}"></h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="add_content_detail">
+                                <label for="txtIndex">Content index</label>
+                                <input type="number" id="txtIndex" name="txtContentIndex" min="1" th:max="${MAX_INDEX}" th:value="${CONTENT_DETAIL.contentIndex}" required>
+                            </div>
+                            <hr width="100%" size="3px" style="z-index: 1;"/>
+                            <div class="add_web_content_url">
+                                <label for="txtUrlAddress">Web address (URL) </label>
+                                <input type="text" id="txtUrlAddress" name="txtUrlAddress" placeholder="Start writing for suggestions or patse a URL" th:value="${CONTENT_DETAIL.contentBody}" required/>
+                                <input type="button" onclick="loadPage()" class="btn btn-success btn_load" value="Load"/>
+                                <p>Use URLs from: Vimeo, Wistia, Wikipedia, Slideshare, Scribd, Prezi, Flickr</p>
+                                <div style="margin-left: 144px; display: none; color: red; font-style: italic" id="invalidWebPage">URL is invalid</div>
+                                <div style="margin-left: 144px; display: block;" id="webpage">
+                                    <object class="object-webpage" type="text/html" th:data="${CONTENT_DETAIL.contentBody}" width="1100px" height="600px" style="overflow:auto;border:5px ridge blue">
+                                    </object>
+                                </div>
+                            </div>
+                            <hr width="100%" size="3px" align="center" color="red" />
+                            <div class="save_content">
+                                <button type="submit" class="btnSave btn btn-primary" onclick="getURL('view')">Save and View</button>
+                                <a class="btnOption btn btn-primary saveAndSelect" style="color: white"><i class="fa fa-caret-down"></i></a>
+                                or
+                                <a th:href="@{'course-detail?txtCourseID=' + ${COURSE.courseID} + '&txtURL=home'}">cancel</a>
+                                <div class="sub_option" id="sub_option" style="display: none;">
+                                    <button type="submit" onclick="getURL('backUnitList')">and back to units list</button>
+                                    <button type="submit" onclick="getURL('addAnother')">and add another</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="another">
+                        <span class="another__upgrade">Upgrade <i class="fas fa-lock"></i></span>
+                        <span class="another__version">TalentLMS 4.8</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+    <script src="js/addContent.js"></script>
+    <script>
+                                        function loadPage() {
+                                            let url = document.getElementById("txtUrlAddress").value;
+                                            let webpage = document.querySelector(".object-webpage");
+
+                                            var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                                                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                                                    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                                                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                                                    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                                                    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+                                            if (!!pattern.test(url)) {
+                                                webpage.data = url;
+                                                document.getElementById("invalidWebPage").style.display = "none";
+                                                document.getElementById("webpage").style.display = "block";
+                                            } else {
+                                                document.getElementById("invalidWebPage").style.display = "block";
+                                                document.getElementById("webpage").style.display = "none";
+                                            }
+                                        }
+                                        function sectionNull() {
+                                            if (document.getElementById("txtSection").value !== "") {
+                                                document.getElementById('xBtn').style.display = 'inline-block';
+                                            }
+                                        }
+                                        sectionNull();
+
+                                        window.addEventListener("click", function (e) {
+                                            let contet_Cate = document.querySelector("#contet_Cate");
+                                            contet_Cate.style.display = "none";
+                                            let sub_option = document.querySelector(".sub_option");
+                                            sub_option.style.display = "none";
+                                        })
+                                        let txtSection = document.querySelector("#txtSection");
+                                        txtSection.addEventListener("click", function (e) {
+                                            e.stopPropagation();
+                                            let element = document.querySelector("#contet_Cate");
+                                            if (element.style.display === "none") {
+                                                element.style.display = "block";
+                                            } else {
+                                                element.style.display = "none";
+                                            }
+                                        })
+                                        let btn_down = document.querySelector("#btn_down");
+                                        btn_down.addEventListener("click", function (e) {
+                                            e.stopPropagation();
+                                            e.preventDefault();
+                                            let element = document.querySelector("#contet_Cate");
+                                            if (element.style.display === "none") {
+                                                element.style.display = "block";
+                                            } else {
+                                                element.style.display = "none";
+                                            }
+                                        })
+
+                                        function getSection(sectionID, sectionName, count, contentSection) {
+                                            document.getElementById("txtSectionID").value = sectionID;
+                                            document.getElementById("txtSection").value = sectionName;
+                                            document.querySelector("#contet_Cate").style.display = "none";
+                                            document.getElementById("xBtn").style.display = "inline-block";
+
+                                            document.getElementById("txtIndex").max = count;
+                                            if (sectionID !== contentSection) {
+                                                document.getElementById("txtIndex").max = count + 1;
+                                            }
+                                        }
+
+                                        function xSection(count, countSection) {
+                                            document.getElementById('txtSection').value = '';
+                                            document.getElementById('txtSectionID').value = '';
+                                            document.getElementById('xBtn').style.display = 'none';
+
+                                            document.getElementById("txtIndex").max = count;
+                                            if (countSection !== null) {
+                                                document.getElementById("txtIndex").max = count + 1;
+                                            }
+                                        }
+
+                                        let saveAndSelect = document.querySelector(".saveAndSelect");
+                                        saveAndSelect.addEventListener("click", function (e) {
+                                            e.stopPropagation();
+                                            let element = document.querySelector(".sub_option");
+                                            if (element.style.display === "none") {
+                                                element.style.display = "block";
+                                            } else {
+                                                element.style.display = "none";
+                                            }
+                                        })
+
+                                        function getURL(select) {
+                                            document.getElementById("txtSelect").value = select;
+
+                                            let url = document.getElementById("txtUrlAddress").value;
+                                            var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+                                                    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+                                                    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+                                                    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+                                                    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+                                                    '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+
+                                            if (!pattern.test(url)) {
+                                                document.getElementById("invalidWebPage").style.display = "block";
+                                                document.getElementById("txtUrlAddress").value = "";
+                                            } else {
+                                                document.getElementById("invalidWebPage").style.display = "none";
+                                            }
+
+                                        }
+    </script>
+</html>

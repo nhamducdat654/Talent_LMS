@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Quiz</title>
+        <link rel="stylesheet" href="css/quiz.css">
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+        <style>
+            #txtSection {
+                width: 220px;
+                border-radius: 4px;
+                border: 1px solid #9999a6;
+                height: 30px;
+                padding: 5px;
+                box-shadow: 0 0 10px #dddddd, 0 0 10px #eeeeee;
+            }
+
+            #txtSection:focus {
+                outline: none;
+                background-color: #eeeeee;
+                border-bottom-left-radius: 0px;
+            }
+
+            .section input::placeholder {
+                color: #9999a6;
+                font-size: 14px;
+            }
+
+            .section input {
+                margin-left: 20px;
+            }
+
+            .section a:hover {
+                cursor: pointer;
+            }
+
+            .icon_down {
+                background-color: red;
+                width: 20px;
+                height: 30px;
+                border: 1px solid red;
+                background-color: #dddddd;
+                position: absolute;
+                left: 300;
+            }
+
+            .icon_down i {
+                font-size: 14px;
+                color: #8a8a8a;
+            }
+
+            #txtSection:focus+#btn_down .fa-caret-up {
+                display: block;
+            }
+
+            #txtSection:focus+#btn_down .fa-caret-down {
+                display: none;
+            }
+
+            #btn_down .fa-caret-up {
+                display: none;
+            }
+
+
+
+            .section {
+                margin-bottom: 20px;
+            }
+
+            #txtSection:focus~#contet_Cate {
+                display: block;
+            }
+
+            .section_content {
+                border: 1px solid red;
+                width: 220px;
+                margin-left: 100px;
+                border-bottom-left-radius: 4px;
+                border-bottom-right-radius: 4px;
+                border: 1px solid #3875d7;
+                position: absolute;
+                top: 248px;
+                display: none;
+                background-color: wheat;
+            }
+
+            .section_content input {
+                width: 90%;
+                margin-left: 10px;
+                outline: none;
+                margin-top: 5px;
+                border: 1px solid #3875d7;
+                height: 30px;
+            }
+
+            .section_content input:focus {
+                box-shadow: 0 0 10px rgba(0, 123, 255, 0.25), 0 0 10px rgba(0, 123, 255, 0.25);
+            }
+
+            .fa-search {
+                position: absolute;
+                left: 180px;
+                top: 10px;
+            }
+
+            .section_content h6 {
+                color: black;
+                margin-left: 10px;
+                padding-left: 5px;
+                padding-top: 5px;
+                width: 90%;
+                margin-top: 5px;
+                height: 30px;
+                cursor: pointer;
+            }
+
+            .section_content h6:hover {
+                background-color: #3875d7;
+                color: white;
+            }
+
+            tr {
+                height: 90px;
+            }
+
+            tr:not(:first-child):hover .dot{
+                display: none;
+            }
+            tr:not(:first-child):hover .edit{
+                display: block;
+            }
+            .tl-center {
+                width: 200px;
+            }
+        </style>
+
+    </head>
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleID == 'r01'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section class="quiz">
+                <div class="container">
+                    <div class="quiz__menu">
+                        <a href="/home-page" class="quiz__menu-link">Home</a>
+                        <div class="quiz__menu-plash">/</div>
+                        <a class="quiz__menu-link" th:href="@{'course-detail?txtCourseID=' + ${COURSE.courseID} + '&txtURL=home'}" th:text="${COURSE.courseName}"></a>
+                        <div class="quiz__menu-plash">/</div>
+                        <a class="quiz__menu-link active" th:text="${QUIZ.unitName}"></a>
+                    </div>
+                    <div class="quiz__main">
+                        <div class="quiz__content">
+                            <div class="quiz__content-wrap" id="select-question">
+                                <div class="quiz__option">
+                                    <input type="hidden" id="txtQuizID" th:value="${QUIZ.quizID}"/>
+                                    <input type="text" name="txtUnitName" id="txtUnitName" class="quiz__search" th:value="${QUIZ.unitName}"/>
+                                    <font id="name-null" style="color: red; display: none;">Test Name cannot null</font>
+                                    <div class="show-quesion" th:onclick="showQuestion([[${COURSE.courseID}]], [[${SHOW_QUESTION}]], [[${MAX_INDEX}]], [[${QUIZ.quizID}]])">
+                                        <span id="show-all-question" th:text="${SHOW_QUESTION}"></span>
+                                    </div>
+                                </div>
+                                <div class="add_content_detail section" style="margin-top: 30px;">
+                                    <label for="Section">Section: </label>
+                                    <input type="hidden" id="txtSectionID" th:value="${QUIZ.section.sectionID}"/>
+                                    <input type="text" id="txtSection" onclick="section()" th:value="${QUIZ.section.sectionName}" readonly/>
+                                    <a th:onclick="xSection([[${COUNT_NULL}]], [[${QUIZ.section.sectionID}]])" style="display: none; color: black; font-size: 15px;"id="xBtn"><i class="fa fa-times"></i></a>
+                                    <button id="btn_down" class="icon_down">
+                                        <i class="fa fa-caret-down"></i>
+                                        <i class="fa fa-caret-up"></i>
+                                    </button>
+                                    <div class="section_content" id="contet_Cate" style="display: none; z-index: 2;">
+                                        <div th:if="${COURSE_SECTION.isEmpty()}">
+                                            This course hasn't section yet.
+                                        </div>
+                                        <div class="sub_section_content" th:each="listSection : ${COURSE_SECTION}">
+                                            <h6 th:onclick="getSection([[${listSection.sectionID}]], [[${listSection.sectionName}]], [[${listSection.countSection}]], [[${QUIZ.section.sectionID}]])" id="section" th:text="${listSection.sectionName}"></h6>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="add_content_detail">
+                                    <label for="txtIndex">Quiz index</label>
+                                    <input type="number" min="1" id="txtIndex" th:max="${MAX_INDEX}" name="txtContentIndex" th:value="${QUIZ.quizIndex}" required/>
+                                </div>
+                                <div class="quiz__content-list" th:if="${LIST_QUESTION.isEmpty()}">
+                                    <div class="none-quiz" style="text-align: center; background-color: #f3f3f3; border: 1px solid #f3f3f3; padding: 100px 0;">
+                                        <img src="img/questions.svg" alt="">
+                                        <h3>Questions list is empty</h3>
+                                        <p>Click Show questions from all courses button above, or add a new question by selecting the question type on the right.</p>
+                                    </div>
+                                </div>
+                                <div class="quiz__content-list" th:if="${!LIST_QUESTION.isEmpty()}">
+                                    <table>
+                                        <tr>
+                                            <th class="tl-left">use</th>
+                                            <th class="tl-left">question</th>
+                                            <th class="tl-center">options</th>
+                                        </tr>
+                                        <tr id="list-question-search" th:each="listQuestion : ${LIST_QUESTION}">
+                                            <td class="tl-left">
+                                                <input type="hidden" th:if="${listQuestion.quiz.quizID != null}" class="questionAdded" th:value="${listQuestion.questionID}"/>
+                                                <a href="#" id="qID" th:if="${listQuestion.quiz.quizID != null}" class="add active" th:onclick="getListQuestion([[${listQuestion.questionID}]])">Added</a>
+                                                <a href="#" th:if="${listQuestion.quiz.quizID == null}" class="add" th:onclick="getListQuestion([[${listQuestion.questionID}]])">Add</a>
+                                            </td>
+                                            <td class="tl-left quiz-name-search" th:utext="${listQuestion.questionName}"></td>
+                                            <td class="tl-center">
+                                                <p class="dot">...</p>
+                                                <div class="edit">
+                                                    <a th:href="@{'/editQuestion?txtCourseID=' + ${COURSE.courseID} + '&txtQuestionID=' + ${listQuestion.questionID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX}}"><img src="img/pencil.svg" alt=""></a>
+                                                    <a href="#"><img src="img/search.svg" alt=""></a>
+                                                    <a th:href="@{'/delete-question?txtCourseID=' + ${COURSE.courseID} + '&txtQuestionID=' + ${listQuestion.questionID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX}}"><img src="img/x.svg" alt=""></a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <div class="quiz__bottom">
+                                        <div class="quiz__paging"></div>
+                                        <div class="bottom__right">
+                                            <input type="text" name="" id="quiz__search" placeholder="Search" />
+                                        </div>
+                                    </div>
+                                    <div class="save">
+                                        <div class="show-options">
+                                            <span style="color: white" th:onclick="save([[${COURSE.courseID}]], 'view')">Save and view</span>
+                                            <i class="fas fa-sort-down" style="color: white"></i>
+                                            <p>or</p>
+                                            <a th:href="@{'course-detail?txtCourseID=' + ${COURSE.courseID} + '&txtURL=home'}" class="cancel">cancel</a>
+                                            <div class="more">
+                                                <a href="#" th:onclick="save([[${COURSE.courseID}]], 'backUnitList')" class="option">and back to units list</a>
+                                                <a href="#" th:onclick="save([[${COURSE.courseID}]], 'addAnother')" class="option">and add another</a>
+                                            </div>
+                                        </div>
+                                        <div class="manager">
+                                            <a href="#" class="delete red">Delete</a>
+                                        </div>
+                                        <div class="delete-confirm ">
+                                            <div class="delete-form ">
+                                                <div class="head">
+                                                    <h4>Delete <span th:text="${QUIZ.unitName}"></span></h4>
+                                                    <i class="far fa-times-circle"></i>
+                                                </div>
+                                                <div class="text">
+                                                    <p>Are you sure you want to delete this unit?
+                                                    </p>
+                                                    <p>This action cannot be undone</p>
+                                                </div>
+                                                <form action="delete-content">
+                                                    <input type="hidden" name="txtSectionID" th:if="${QUIZ.section.sectionID != null}" th:value="${QUIZ.section.sectionID}"/>
+                                                    <input type="hidden" name="txtSectionID" th:if="${QUIZ.section.sectionID == null}" value="0"/>
+                                                    <input type="hidden" name="txtCourseID" th:value="${COURSE.courseID}"/>
+                                                    <input type="hidden" name="txtContentID" th:value="${QUIZ.quizID}"/>
+                                                    <input type="hidden" name="txtContentOrQuiz" value="quiz"/>
+                                                    <div class="manager">
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                        <a href="#" class="gray cancel">Cancel</a>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="quiz__content-wrap" id="tests-option" style="display: none; background-color: #f3f3f3; padding-top: 50px; padding-left: 50px;">
+                                <div>
+                                    Time limit:
+                                    <input type="number" id="txtTimelimit" min="0" placeholder="minutes" style="margin-left: 20px; border-radius: 3px;">
+                                </div>
+                                <div style="margin-top: 50px;">
+                                    Pass Score:
+                                    <input type="number" id="txtPassScore" min="0" max="100" value="50" style="margin-left: 20px; border-radius: 3px;">
+                                    <span style="border-radius: 3px; border: 1px solid black;">%</span>
+                                </div>
+                            </div>
+                            <div class="quiz__content-selection">
+                                <div class="select-option">
+                                    <div class="item selected">
+                                        <a href="#" onclick="selectQuestion()"> <i class="far fa-file-alt fa-2x"></i></a>
+                                        <div class="choose">
+                                            <a onclick="selectQuestion()" class="">select question</a>
+                                        </div>
+                                    </div>
+                                    <div class="item" style="margin-top: 20px;">
+                                        <a onclick="testsOption()"><i class="fas fa-tools fa-2x"></i></a>
+                                        <div class="choose">
+                                            <a onclick="testsOption()" class="">tests option</a>
+                                        </div>
+                                    </div>
+                                    <div class="item">
+                                        <a th:href="@{'/addQuestion?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX}}"><i class="fas fa-plus fa-2x"></i></a>
+                                        <div class="choose">
+                                            <a th:href="@{'/addQuestion?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX}}" class="black">add question</a>
+                                            <a th:href="@{'/addQuestion?txtCourseID=' + ${COURSE.courseID} + '&txtContentID=' + ${QUIZ.quizID} + '&txtMaxIndex=' + ${MAX_INDEX}}">Multiple choice</a>
+                                            <a data-bs-toggle="modal" data-bs-target="#exampleModalImport" style="color: #0d6efd">Import</a>
+                                            <div class="modal fade" id="exampleModalImport" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Import</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <textarea id="inputTextToSave" style="display: none" ></textarea>
+                                                            <h6 style="display: inline">Select a File to Load:</h6>
+                                                            <input type="file" id="fileToLoad" accept="text/plain" th:onchange="loadFileAsText([[${COURSE.courseID}]])">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a href="#" type="button" class="btn btn-success" id="importID">Import</a>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="another">
+                        <span class="another__version"><i class="fas fa-lock"></i>TalentLMS 4.8</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+    <script src="js/editQuiz.js"></script>
+    <script>
+                                                document.getElementById("quiz__search").addEventListener("input", () => {
+
+                                                    let input = document.getElementById("quiz__search").value;
+                                                    li = document.querySelectorAll("#list-question-search");
+
+                                                    for (let i = 0; i < li.length; i++) {
+                                                        let value = li[i].getElementsByClassName("quiz-name-search")[0].innerHTML;
+                                                        if (input.length > 0) {
+                                                            if (!value.toUpperCase().includes(input.toUpperCase())) {
+                                                                li[i].style.display = "none";
+                                                            } else {
+                                                                li[i].style.display = "";
+                                                            }
+                                                        } else {
+                                                            li[i].style.display = "";
+                                                        }
+
+                                                    }
+                                                })
+    </script>
+    <script>
+        function loadFileAsText(courseID) {
+            var fileToLoad = document.getElementById("fileToLoad").files[0];
+            var fileReader = new FileReader();
+            fileReader.onload = function (fileLoadedEvent) {
+                var textFromFileLoaded = fileLoadedEvent.target.result;
+                document.getElementById("inputTextToSave").innerHTML = textFromFileLoaded;
+                getValueFromTextArea(document.getElementById("inputTextToSave").innerHTML, courseID);
+            };
+            fileReader.readAsText(fileToLoad, "UTF-8");
+        }
+
+        function getValueFromTextArea(data, courseID) {
+            let questionAns = [];
+            let question = [];
+            let questionCorrect = [];
+            let textArea = data.split("\n");
+            for (let i = 0; i < textArea.length; i++) {
+                if (i == 0 || (i >= 6 && i % 6 == 0)) {
+                    questionAns.push(textArea[i]);
+                } else if (i == 5 || ((i - 5) % 6 == 0 && i)) {
+                    questionCorrect.push(textArea[i]);
+                } else {
+                    question.push(textArea[i]);
+                }
+            }
+            addHref(questionAns, question, questionCorrect, courseID);
+        }
+        function addHref(arrayAns, arrayQues, arrayCorrect, courseID) {
+            document.getElementById("importID").href = "/addQuestionByImport?txtArrayAns=" + arrayAns
+                    + "&txtArrayQues=" + arrayQues + "&txtArrayCorrect=" + arrayCorrect + "&txtCourseID=" + courseID;
+        }
+    </script>
+    <script th:inline="javascript">
+        function showQuestion(courseID, showText, index, quizID) {
+            location.href = "/add-quiz-form?txtCourseID=" + courseID + "&txtContentID=" + quizID + "&txtMaxIndex=" + index + "&txtShowQuestion=" + showText;
+        }
+        function selectQuestion() {
+            document.getElementById("select-question").style.display = "block";
+            document.getElementById("tests-option").style.display = "none";
+        }
+        function testsOption() {
+            document.getElementById("select-question").style.display = "none";
+            document.getElementById("tests-option").style.display = "block";
+        }
+
+        function section() {
+            let element = document.querySelector("#contet_Cate");
+            if (element.style.display === "none") {
+                element.style.display = "block";
+            } else {
+                element.style.display = "none";
+            }
+        }
+
+        function getSection(sectionID, sectionName, count, contentSection) {
+            document.getElementById("txtSectionID").value = sectionID;
+            document.getElementById("txtSection").value = sectionName;
+            document.querySelector("#contet_Cate").style.display = "none";
+            document.getElementById("xBtn").style.display = "inline-block";
+            document.getElementById("txtIndex").max = count;
+            if (sectionID !== contentSection) {
+                document.getElementById("txtIndex").max = count + 1;
+            }
+
+        }
+
+        function xSection(count, countSection) {
+            document.getElementById('txtSection').value = '';
+            document.getElementById('txtSectionID').value = '';
+            document.getElementById('xBtn').style.display = 'none';
+            document.getElementById("txtIndex").max = count;
+            if (countSection !== null) {
+                document.getElementById("txtIndex").max = count + 1;
+            }
+        }
+        0
+        function checkSection() {
+            let element = document.getElementById("txtSection").value;
+            if (element !== "") {
+                document.getElementById('xBtn').style.display = 'inline-block';
+            }
+        }
+        checkSection();
+
+        let listQuestion = [];
+        function loadQuestion() {
+            let element = document.getElementsByClassName("questionAdded");
+
+            for (let i = 0, max = element.length; i < max; i++) {
+                listQuestion.push(element[i].value);
+            }
+
+        }
+        loadQuestion();
+        function getListQuestion(questionID) {
+
+            if (listQuestion.length === 0) {
+                listQuestion.push(questionID);
+            } else {
+                let flag = true;
+
+                listQuestion.forEach(function (item) {
+                    if (item == questionID) {
+                        let pos = listQuestion.findIndex(item => item == questionID);
+                        listQuestion.splice(pos, 1);
+                        flag = false;
+                    }
+                });
+
+                if (flag) {
+                    listQuestion.push(questionID);
+                }
+            }
+        }
+
+        function sectionNull() {
+            if (document.getElementById("txtSection").value !== "") {
+                document.getElementById('xBtn').style.display = 'inline-block';
+            }
+        }
+        sectionNull();
+
+        function save(id, select) {
+            let unitName = document.getElementById("txtUnitName").value;
+            let section = document.getElementById("txtSectionID").value;
+            let quizID = document.getElementById("txtQuizID").value;
+            let index = document.getElementById("txtIndex").value;
+            let maxIndex = document.getElementById("txtIndex").max;
+
+            if (index > maxIndex) {
+                alert("Quiz index must be less than or equal " + maxIndex);
+            }
+
+            if (unitName === "") {
+                document.getElementById("name-null").style.display = "inline-block";
+            } else {
+                document.getElementById("name-null").style.display = "none";
+            }
+
+            if (listQuestion.length === 0) {
+                alert("You must assign at least one question to the test");
+            }
+
+            let timeLimit = document.getElementById("txtTimelimit").value;
+            if (timeLimit < 0) {
+                alert("Timelimit must be more than or equal 0");
+            }
+
+            let passScore = document.getElementById("txtPassScore").value;
+            if (passScore < 0 || passScore > 100) {
+                alert("Pass score must be more than or equal 0 and less than or equal 100");
+            }
+            if (timeLimit === "") {
+                timeLimit = 0;
+            }
+
+            if (passScore === "") {
+                passScore = 0;
+            }
+
+            if (unitName !== "" && listQuestion.length !== 0 && timeLimit >= 0 && passScore >= 0 && passScore <= 100 && index <= maxIndex) {
+                location.href = "/edit-quiz?txtCourseID=" + id + "&txtUnitName=" + unitName + "&txtSection=" + section + "&txtSelect=" + select + "&txtListQuestion=" + listQuestion + "&txtTimeLimit=" + timeLimit + "&txtPassScore=" + passScore + "&txtQuizID=" + quizID + "&txtIndex=" + index;
+            }
+        }
+    </script>
+</html>

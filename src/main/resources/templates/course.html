@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Course</title>
+
+        <link rel="stylesheet" href="css/course.css" />
+        <link rel="stylesheet" href="css/style.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+        <style>
+            .content-option {
+                display: inline-block;
+            }
+
+            .content-option:hover + .hide-option {
+                display: inline-block !important;
+            }
+
+            .content-name {
+                text-decoration: none;
+                color: black;
+            }
+
+            .content-name:hover {
+                text-decoration: underline;
+                color: black;
+            }
+
+            .hide-option:hover {
+                display: inline-block !important;
+            }
+
+            .hide-option a {
+                color: black;
+                text-decoration: none;
+            }
+
+            .hide-option a:hover {
+                text-decoration: underline;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+    <!-- Header  -->
+    <header>
+        <div class="container d-flex justify-content-between align-items-center">
+            <a href="/home-page"><img src="img/talent_bigger.png"></a>
+            <div>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn name__role"><span th:text="${USER.firstName.charAt(0) + '. ' + USER.lastName}"></span> | <b th:text="${USER.role.roleName}"></b><b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fas fa-address-card"></i>My info</a>
+                        <a th:href="@{/edit(txtId=${USER.username})}"><i class="fa fa-book"></i>My courses</a>
+                        <a href="#"><i class="fas fa-certificate"></i>My certifications</a>
+                    </div>
+                </div>
+                <div class="dropdown" th:if="${USER.role.roleName == 'Super Admin' || USER.role.roleName == 'Admin'}">
+                    <a href="#" class="dropbtn"><span>GO TO</span> <b class="carpet"></b></a>
+                    <div class="dropdown-content">
+                        <a href="/home-page"><i class="fa fa-home"></i>Home</a>
+                        <a href="/users"><i class="fa fa-user"></i>User</a>
+                        <a href="/courseList"><i class="fa fa-book"></i>Courses</a>
+                        <a href="/categorylist"><i class="fa fa-bars"></i>Categories</a>
+
+                        <hr>
+                        <a href="/user/create"><i class="fa fa-plus-circle"></i>Add user</a>
+                        <a href="/addCourse"><i class="fa fa-plus-circle"></i>Add course</a>
+                    </div>
+                </div>
+                <input type="text" placeholder="Search">
+                <a th:href="@{/logout}"><i class="fa fa-sign-out fa-lg" title="Log out"></i></a>
+            </div>
+        </div>
+    </header>
+    <!-- Header  -->
+        <main>
+            <section class="course__1">
+                <div class="container">
+                    <div class="course__menu">
+                        <a href="/home-page" class="course__menu-link">Home</a>
+                        <div class="course__menu-plash">/</div>
+                        <a class="course__menu-link active" th:text="${COURSE_DETAIL.courseName}"></a>
+                    </div>
+                    <div class="course_home">
+                        <div class="test">
+                            <div class="course_detail">
+                                <div class="course_info">
+                                    <img src="img/unknown_big.png" alt="" th:if="${COURSE_DETAIL.courseImg == null}"/>
+                                    <img th:src="${COURSE_DETAIL.courseImg}" alt="" th:if="${COURSE_DETAIL.courseImg != null}"/>
+                                    <div class="course_name_des">
+                                        <h6 th:text="${COURSE_DETAIL.courseName}"></h6>
+                                        <p th:text="${COURSE_DETAIL.courseDes}"></p>
+                                    </div>
+                                </div>
+                                <div class="course_option">
+                                    <div class="add">
+                                        <button class="btn btn-primary">
+                                            Add <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <div class="sub_menu">
+                                            <div class="content_webcontent">
+                                                <div class="content">
+                                                    <a th:href="@{'add-content-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=0&txtMaxIndex=0'">
+                                                        <ion-icon name="document-text-outline"></ion-icon>
+                                                        <p>Content</p>
+                                                    </a>
+                                                </div>
+                                                <div class="webcontent">
+                                                    <a th:href="@{'add-webcontent-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=0&txtMaxIndex=0'">
+                                                        <ion-icon name="cloud-outline"></ion-icon>
+                                                        <p>Web Content</p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="content_webcontent">
+                                                <div class="content">
+                                                    <a th:href="@{'add-quiz-form?txtCourseID=' + ${COURSE_DETAIL.courseID} + '&txtContentID=0&txtMaxIndex=0&txtShowQuestion=Show questions from this course'}">
+                                                        <ion-icon name="document"></ion-icon>
+                                                        <p>Test</p>
+                                                    </a>
+                                                </div>
+                                                <div class="webcontent">
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                        <i class="fa fa-quote-left" style="margin-top: 13px; margin-right: 10px; font-size: 16px;"></i>
+                                                        <p>Section</p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Add Section</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="add-section">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="txtSectionIndex" value="0"/>
+                                                        <input type="hidden" name="txtSectionID" value="0"/>
+                                                        <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                        Section Name:
+                                                        <input type="text" name="txtSectionName"  required style="margin-left: 20px;">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <form action="editCourse">
+                                        <input type="hidden" name="txtid" th:value="${COURSE_DETAIL.courseID}">
+                                        <button class="btn btn-primary" type="submit">Edit Course</button>
+                                    </form>
+                                </div>
+                                <div class="course_content"></div>
+                            </div>
+                            <div class="drag_and_drop" th:if="${COURSE_SECTION.isEmpty() && LIST_CONTENT.isEmpty() && LIST_QUIZ.isEmpty()}">
+                                <img src="img/content.svg" alt="" />
+                                <a class="btn_sub_menu">Add content to your course</a>
+                                <div>
+                                    <p>
+                                        It's easy — <b>drag-and-drop</b> files here. Or click the
+                                        <b>Add</b> button above to start building your course.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="drag_and_drop_content" th:if="${!LIST_CONTENT.isEmpty() || !LIST_QUIZ.isEmpty()}" >
+                                <div th:each="count : ${COUNT}" th:if="${count.sectionID == null}">
+                                    <th:block th:each="i: ${#numbers.sequence(0, count.countSection - 1)}">
+                                        <div class="detail__content-desc" th:if="${!LIST_CONTENT.isEmpty()}" th:each="content : ${LIST_CONTENT}">
+                                            <div th:if="${content.section.sectionID == null && content.contentIndex == (i+1)}" class="content-option">
+                                                <ion-icon name="document-text-outline" style="font-size: 18px; margin-left: 20px;" th:if="${!content.contentBody.contains('http')}"></ion-icon>
+                                                <ion-icon name="cloud-outline" style="font-size: 18px; margin-left: 20px;" th:if="${content.contentBody.contains('http')}"></ion-icon>
+                                                <a th:href="@{'doContent?contentid=' + ${content.contentID}} + '&txtMaxIndex=' + ${count.countSection}" class="content-name" style="font-size: 16px" th:text="${content.unitName}"></a>  
+                                            </div>
+                                            <div th:if="${content.section.sectionID == null && content.contentIndex == (i+1)}" style="padding-left: 20px; display: none; margin-left: -4px" class="hide-option">
+                                                <a th:if="${!content.contentBody.contains('http')}" th:href="@{'add-content-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=' + ${content.contentID} + '&txtMaxIndex=' + ${count.countSection}">Edit</a>
+                                                <a th:if="${content.contentBody.contains('http')}" th:href="@{'add-webcontent-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=' + ${content.contentID} + '&txtMaxIndex=' + ${count.countSection}">Edit</a>
+                                                <a href="#" data-bs-toggle="modal" th:data-bs-target="'#contentDeleteNull' + ${content.contentID}" style="margin-left: 20px;">Delete</a>
+                                            </div>
+                                            <div class="modal fade" th:id="'contentDeleteNull' + ${content.contentID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Delete Content</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="delete-content">
+                                                            <div class="modal-body" style="font-weight: 100">
+                                                                Are you sure you want to delete this content?</br>
+                                                                This action cannot be undone
+                                                                <input type="hidden" name="txtSectionID" value="0"/>
+                                                                <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                                <input type="hidden" name="txtContentID" th:value="${content.contentID}"/>
+                                                                <input type="hidden" name="txtContentOrQuiz" value="content"/>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="detail__content-desc" th:if="${!LIST_QUIZ.isEmpty()}" th:each="quiz : ${LIST_QUIZ}">
+                                            <div th:if="${quiz.section.sectionID == null && quiz.quizIndex == (i+1)}" class="content-option">
+                                                <ion-icon name="document" style="font-size: 18px; margin-left: 20px;"></ion-icon>
+                                                <a th:href="@{'doQuiz?quizid=' + ${quiz.quizID}} + '&txtMaxIndex=' + ${count.countSection}" class="content-name" style="font-size: 16px" th:text="${quiz.unitName}"></a>
+                                            </div>
+                                            <div th:if="${quiz.section.sectionID == null && quiz.quizIndex == (i+1)}" style="padding-left: 20px; display: none; margin-left: -4px" class="hide-option">
+                                                <a th:href="@{'add-quiz-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=' + ${quiz.quizID} + '&txtMaxIndex=' + ${count.countSection} + '&txtShowQuestion=Show questions from this course'">Edit</a>
+                                                <a href="#" data-bs-toggle="modal" th:data-bs-target="'#quizDeleteNull' + ${quiz.quizID}" style="margin-left: 20px;">Delete</a>
+                                            </div>
+                                            <div class="modal fade" th:id="'quizDeleteNull' + ${quiz.quizID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Delete Test</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="delete-content">
+                                                            <div class="modal-body" style="font-weight: 100">
+                                                                Are you sure you want to delete this content?</br>
+                                                                This action cannot be undone
+                                                                <input type="hidden" name="txtSectionID" value="0"/>
+                                                                <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                                <input type="hidden" name="txtContentID" th:value="${quiz.quizID}"/>
+                                                                <input type="hidden" name="txtContentOrQuiz" value="quiz"/>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+
+                            <div class="drag_and_drop_content" th:if="${!COURSE_SECTION.isEmpty() || !LIST_CONTENT.isEmpty() || !LIST_QUIZ.isEmpty()}" th:each="section : ${COURSE_SECTION}">
+                                <div class="detail__content-title" th:if="${!COURSE_SECTION.isEmpty()}" style="background-color: #f2f2f2; border-radius: 5px; padding: 8px 16px;">
+                                    <div th:text="${section.sectionName}" class="content-option"></div>
+                                    <div style="padding-left: 20px; display: none; margin-left: -4px;" class="hide-option">
+                                        <a href="#" style="font-size: 10px;" data-bs-toggle="modal" th:data-bs-target="'#exampleModalEdit' + ${section.sectionID}">Edit</a>
+                                        <a href="#" style="margin-left: 20px; font-size: 10px;" data-bs-toggle="modal" th:data-bs-target="'#exampleModalDelete' + ${section.sectionID}">Delete</a>
+                                    </div>
+                                    <div class="modal fade" th:id="'exampleModalEdit' + ${section.sectionID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Edit Section</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="add-section">
+                                                    <div class="modal-body">
+                                                        <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                        <input type="hidden" name="txtSectionID" th:value="${section.sectionID}"/>
+                                                        <div>
+                                                            Section Name:
+                                                            <input type="text" name="txtSectionName" th:value="${section.sectionName}" required style="margin-left: 20px;">
+                                                        </div>
+                                                        <div style="margin-top: 10px;">
+                                                            Section Index:
+                                                            <input type="number" name="txtSectionIndex" th:value="${section.sectionIndex}" min="1" th:max="${COURSE_SECTION.size()}" required style="margin-left: 20px;">
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" th:id="'exampleModalDelete' + ${section.sectionID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Delete Section</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <form action="delete-section">
+                                                    <div class="modal-body" style="font-weight: 100">
+                                                        Are you sure you want to delete the section <span th:text="${section.sectionName}" style="font-weight: 600"></span>?</br>
+                                                        This action cannot be undone
+                                                        <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                        <input type="hidden" name="txtSectionID" th:value="${section.sectionID}"/>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div th:each="count : ${COUNT}" th:if="${count.sectionID == section.sectionID}">
+                                    <th:block th:each="i: ${#numbers.sequence(0, count.countSection - 1)}">
+                                        <div class="detail__content-desc" th:if="${!LIST_CONTENT.isEmpty()}" th:each="content : ${LIST_CONTENT}">
+                                            <div th:if="${content.section.sectionID == section.sectionID && content.contentIndex == (i+1)}" class="content-option">
+                                                <ion-icon name="document-text-outline" style="font-size: 18px; margin-left: 20px;" th:if="${!content.contentBody.contains('http')}"></ion-icon>
+                                                <ion-icon name="cloud-outline" style="font-size: 18px; margin-left: 20px;" th:if="${content.contentBody.contains('http')}"></ion-icon>
+                                                <a th:href="@{'doContent?contentid=' + ${content.contentID}} + '&txtMaxIndex=' + ${count.countSection}" class="content-name" style="font-size: 16px" th:text="${content.unitName}"></a>
+                                            </div>
+                                            <div th:if="${content.section.sectionID == section.sectionID && content.contentIndex == (i+1)}" style="padding-left: 20px; display: none; margin-left: -4px" class="hide-option">
+                                                <a th:if="${!content.contentBody.contains('http')}" th:href="@{'add-content-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=' + ${content.contentID} + '&txtMaxIndex=' + ${count.countSection}">Edit</a>
+                                                <a th:if="${content.contentBody.contains('http')}" th:href="@{'add-webcontent-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=' + ${content.contentID} + '&txtMaxIndex=' + ${count.countSection}">Edit</a>
+                                                <a href="#" data-bs-toggle="modal" th:data-bs-target="'#contentDelete' + ${content.contentID}" style="margin-left: 20px;">Delete</a>
+                                            </div>
+                                            <div class="modal fade" th:id="'contentDelete' + ${content.contentID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Delete Content</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="delete-content">
+                                                            <div class="modal-body" style="font-weight: 100">
+                                                                Are you sure you want to delete this content?</br>
+                                                                This action cannot be undone
+                                                                <input type="hidden" name="txtSectionID" th:value="${content.section.sectionID}"/>
+                                                                <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                                <input type="hidden" name="txtContentID" th:value="${content.contentID}"/>
+                                                                <input type="hidden" name="txtContentOrQuiz" value="content"/>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="detail__content-desc" th:if="${!LIST_QUIZ.isEmpty()}" th:each="quiz : ${LIST_QUIZ}">
+                                            <div th:if="${quiz.section.sectionID == section.sectionID && quiz.quizIndex == (i+1)}" class="content-option">
+                                                <ion-icon name="document" style="font-size: 18px; margin-left: 20px;"></ion-icon>
+                                                <a th:href="@{'doQuiz?quizid=' + ${quiz.quizID}} + '&txtMaxIndex=' + ${count.countSection}" class="content-name" style="font-size: 16px" th:text="${quiz.unitName}"></a>
+                                            </div>
+                                            <div th:if="${quiz.section.sectionID == section.sectionID && quiz.quizIndex == (i+1)}" style="padding-left: 20px; display: none; margin-left: -4px" class="hide-option">
+                                                <a th:href="@{'add-quiz-form?txtCourseID=' + ${COURSE_DETAIL.courseID}} + '&txtContentID=' + ${quiz.quizID} + '&txtMaxIndex=' + ${count.countSection} + '&txtShowQuestion=Show questions from this course'">Edit</a>
+                                                <a href="#" data-bs-toggle="modal" th:data-bs-target="'#quizDelete' + ${quiz.quizID}" style="margin-left: 20px;">Delete</a>
+                                            </div>
+                                            <div class="modal fade" th:id="'quizDelete' + ${quiz.quizID}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Delete Test</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="delete-content">
+                                                            <div class="modal-body" style="font-weight: 100">
+                                                                Are you sure you want to delete this content?</br>
+                                                                This action cannot be undone
+                                                                <input type="hidden" name="txtCourseID" th:value="${COURSE_DETAIL.courseID}"/>
+                                                                <input type="hidden" name="txtContentID" th:value="${quiz.quizID}"/>
+                                                                <input type="hidden" name="txtSectionID" th:value="${quiz.section.sectionID}"/>
+                                                                <input type="hidden" name="txtContentOrQuiz" value="quiz"/>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="course_intro">
+                            <div class="content">
+                                <i class="fa fa-table"></i>
+                                <div class="content_detail">
+                                    <a>
+                                        <h6>CONTENT</h6>
+                                    </a>
+                                    <div>
+                                        <p th:text="${UNITS + ' units'}"></p>
+                                        <p>0 inactive</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="another">
+                        <span class="another__upgrade">Upgrade <i class="fas fa-lock"></i></span>
+                        <span class="another__version">TalentLMS 4.8</span>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </body>
+    <!-- JQuery -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap tooltips -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="js/course.js"></script>
+    <script>
+        function test(id) {
+            console.log(id);
+        }
+    </script>
+</html>

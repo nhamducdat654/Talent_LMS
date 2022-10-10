@@ -1,0 +1,212 @@
+.active {
+    color: white !important;
+    font-weight: bold;
+}
+
+.course_info {
+    display: flex;
+}
+
+.course_info img {
+    width: 120px;
+    height: 75px;
+    margin-right: 20px;
+}
+
+.course_name_des {
+    margin-top: 10px;
+}
+
+.course_option {
+    display: flex;
+}
+
+.course_option button {
+    background-color: #000fe6;
+    font-weight: 700;
+    border-radius: 4px;
+    font-size: 13px;
+    height: 30px;
+    padding: 0 16px;
+    margin-right: 8px;
+}
+
+.add button i {
+    color: #c1c1c1;
+}
+
+.add button:hover~.add button i {
+    color: white;
+}
+
+.sub_menu {
+    width: 200px;
+    z-index: 1;
+    background-color: #ffffff;
+}
+
+.add button:hover {
+    box-shadow: none;
+}
+
+.content a,
+.webcontent a {
+    display: flex;
+    border-radius: 4px;
+}
+
+.sub_menu a {
+    text-decoration: none;
+    color: black;
+}
+
+.sub_menu a:hover {
+    color: #0367c8;
+    background-color: #c1c1c1;
+}
+
+.sub_menu a:hover~i {
+    color: #0367c8;
+}
+
+ion-icon {
+    margin-top: 13px;
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.content a p,
+.webcontent a p {
+    margin-top: 8px;
+}
+
+.content_webcontent {
+    padding-left: 14px;
+    margin-top: 20px;
+    width: 90%;
+    color: black;
+}
+
+.sub_menu {
+    margin-top: 5px;
+    box-shadow: 0 5px 10px rgb(0 0 0 / 20%);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    display: none;
+    position: absolute;
+}
+
+.sub_menu.active {
+    display: block;
+}
+
+.drag_and_drop {
+    width: 100%;
+    border: 3px dashed #c1c1c1;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.drag_and_drop_content {
+    width: 100%;
+    margin-top: 30px;
+    padding-left: 20px;
+}
+
+.drag_and_drop img {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+.drag_and_drop a {
+    margin: 0 325px 20px 325px;
+    color: #0367c8;
+    text-decoration: none;
+    display: block;
+    font-size: 20px;
+}
+
+.drag_and_drop a:hover {
+    box-shadow: 0px 1px 0 0 #0367c8;
+    cursor: pointer;
+}
+
+.drag_and_drop div {
+    margin-bottom: 60px;
+    font-size: 12px;
+}
+
+.course_home {
+    display: flex;
+    padding: 0 20px;
+    background-color: #ffffff;
+}
+
+.course_home .test {
+    width: 75%;
+    padding: 10px 20px 30px 10px;
+    border-right: 1px solid #f3f3f3;
+}
+
+.course_intro i {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    line-height: 40px;
+    padding-left: 10px;
+    margin-right: 10px;
+    background-color: rgba(3, 103, 200, 0.8);
+    border-radius: 50%;
+    color: white;
+}
+
+.content {
+    display: flex;
+    margin-top: 20px;
+}
+
+.content a {
+    width: 100%;
+}
+
+.course_intro .content {
+    margin-left: 20px;
+}
+
+.content_detail a {
+    text-decoration: none;
+    color: #0367d1;
+}
+
+.content_detail a h6 {
+    font-size: 14px;
+}
+
+.content_detail div {
+    display: flex;
+}
+
+.content_detail div p {
+    margin-right: 10px;
+    font-size: 12px;
+}
+
+.content_webcontent p {
+    font-weight: normal;
+}
+
+.sub_menu .content_webcontent {
+    margin-top: 0;
+}
+
+.content_webcontent .content {
+    margin-top: 0;
+}
+
+.sub_menu .content_webcontent:first-child::after {
+    display: block;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: #c1c1c1;
+    margin: 5px 0;
+}
